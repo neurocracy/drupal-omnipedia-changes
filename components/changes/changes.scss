@@ -1,0 +1,252 @@
+// -----------------------------------------------------------------------------
+//   Omnipedia - Content changes - Wiki node changes styles
+// -----------------------------------------------------------------------------
+
+@use 'material.common/material.general' as material-general;
+@use 'sass:color';
+@use 'sass/helpers/colour';
+
+///
+/// Omnipedia wiki node changes - added element background colour on light.
+///
+/// @link https://www.materialui.co/colors/light-green/400
+///
+$changes-diff-added-background-colour-on-light: #9CCC65;
+
+///
+/// Omnipedia wiki node changes - added element background colour on dark.
+///
+/// @link https://www.materialui.co/colors/light-green/900
+///
+$changes-diff-added-background-colour-on-dark: color.scale(
+  #33691E, $lightness: -10%
+);
+
+///
+/// Omnipedia wiki node changes - removed element background colour on light.
+///
+/// @link https://www.materialui.co/colors/red/200
+///
+$changes-diff-removed-background-colour-on-light: #ef9a9a;
+
+///
+/// Omnipedia wiki node changes - removed element background colour on dark.
+///
+/// @link https://www.materialui.co/colors/red/900
+///
+$changes-diff-removed-background-colour-on-dark: color.scale(
+  #b71c1c, $lightness: -20%
+);
+
+///
+/// Omnipedia wiki node changes - changed element background colour on light.
+///
+/// @link https://www.materialui.co/colors/yellow/300
+///
+$changes-diff-changed-background-colour-on-light: #FFF176;
+
+///
+/// Omnipedia wiki node changes - changed element background colour on dark.
+///
+/// @link https://www.materialui.co/colors/yellow/700
+///
+$changes-diff-changed-background-colour-on-dark: color.scale(
+  #FBC02D, $lightness: -40%
+);
+
+///
+/// Omnipedia wiki node changes - element padding.
+///
+$changes-diff-padding: 0.3em;
+
+///
+/// Stripe colour to apply to removed diffs for colour blindness on light.
+///
+$changes-diff-removed-stripe-colour-on-light: hsla(0, 0%, 0%, 0.10);
+
+///
+/// Stripe colour to apply to removed diffs for colour blindness on dark.
+///
+$changes-diff-removed-stripe-colour-on-dark: hsla(0, 0%, 0%, 0.25);
+
+///
+/// Stripe colour to apply to changed diffs for colour blindness on light.
+///
+$changes-diff-changed-stripe-colour-on-light: hsla(0, 0%, 0%, 0.15);
+
+///
+/// Stripe colour to apply to changed diffs for colour blindness on light.
+///
+$changes-diff-changed-stripe-colour-on-dark:
+  $changes-diff-changed-stripe-colour-on-light;
+
+// Debug stuff. These should only be visible if the clean up event subscriber is
+// disabled for testing purposes.
+.omnipedia-changes {
+
+  ins.diffmod,
+  del.diffmod {
+    margin-inline-start:  0.3em;
+    margin-inline-end:    0.3em;
+  }
+
+  ins.diffmod {
+
+    @include colour.set($background: #93efef);
+
+    text-decoration: none;
+
+  }
+
+  del.diffmod {
+    @include colour.set($background: #fc81e8);
+  }
+
+}
+
+.omnipedia-changes,
+.omnipedia-changes-help {
+  &__diff {
+    padding-left:   $changes-diff-padding;
+    padding-right:  $changes-diff-padding;
+
+    border-radius:  material-general.$border-radius;
+
+    // If this wraps to a new line, this property makes the horizontal padding
+    // and border radius apply to each line where they break:
+    //
+    // @see http://callmenick.com/post/multi-line-padded-text-css-box-decoration-break
+    box-decoration-break: clone;
+  }
+
+  &__diff--added {
+    // Remove the default underlines on <ins> elements.
+    text-decoration: none;
+
+    @include colour.set(
+      $background: $changes-diff-added-background-colour-on-light
+    );
+
+    @include colour.on-dark-scheme {
+      @include colour.set(
+        $background: $changes-diff-added-background-colour-on-dark
+      );
+    }
+  }
+
+  &__diff--removed {
+    text-decoration: line-through;
+
+    @include colour.set(
+      $background: $changes-diff-removed-background-colour-on-light
+    );
+
+    @include colour.on-dark-scheme {
+      @include colour.set(
+        $background: $changes-diff-removed-background-colour-on-dark
+      );
+    }
+
+    // Add a striped background gradient to make this more visible to people
+    // with certain types of colour blindness.
+    background-image: linear-gradient(
+      90deg,
+      var(--stripe-colour) 50%,
+      transparent 50%,
+      transparent
+    );
+
+    --stripe-colour: #{$changes-diff-removed-stripe-colour-on-light};
+
+    @include colour.on-dark-scheme {
+      --stripe-colour: #{$changes-diff-removed-stripe-colour-on-dark};
+    }
+
+    // This controls the size of the gradient.
+    background-size: 1em;
+  }
+
+  &__diff--changed {
+    @include colour.set(
+      $background: $changes-diff-changed-background-colour-on-light
+    );
+
+    @include colour.on-dark-scheme {
+      @include colour.set(
+        $background: $changes-diff-changed-background-colour-on-dark
+      );
+    }
+
+    --stripe-colour: #{$changes-diff-changed-stripe-colour-on-light};
+
+    @include colour.on-dark-scheme {
+      --stripe-colour: #{$changes-diff-changed-stripe-colour-on-dark};
+    }
+
+    // Add a striped background gradient to make this more visible to people
+    // with certain types of colour blindness.
+    background-image: linear-gradient(
+      -45deg,
+      var(--stripe-colour)  25%,
+      transparent           25%,
+      transparent           50%,
+      var(--stripe-colour)  50%,
+      var(--stripe-colour)  75%,
+      transparent           75%,
+      transparent
+    );
+
+    // This controls the size of the gradient.
+    background-size: 1.5em;
+
+    del {
+      opacity: 0.7;
+    }
+
+    ins {
+      text-decoration: none;
+
+      // This adds a space between the <del> and <ins> for readability.
+      &::before {
+        content: ' ';
+      }
+    }
+  }
+}
+
+// The changes help block contents.
+.omnipedia-changes-help {
+  &__description,
+  .item-list {
+    // This allows the entire legend to be laid out inline after the end of the
+    // description, which cuts down on vertical space it uses.
+    display: inline;
+  }
+
+  // The legend is laid out as inline-flex so that it can be placed right after
+  // the end of the description. Because we're using flexbox, the legend will
+  // always be placed on its own line if it can't fit in the remaining space
+  // after the text, and will never be split into two or more lines unless
+  // the width of the entire line it occupies becomes less wide than the legend
+  // itself. Basically, this will only wrap within itself as a last resort.
+  &__legend {
+    display: inline-flex;
+
+    flex-wrap: wrap;
+
+    // Gap property supported for flexbox in Chromium 84 (July 2020) and Firefox
+    // 63 (October 2018). Safari does not yet support it in their stable release
+    // (14, released September 2020), but is coming in the next version:
+    //
+    // @see https://caniuse.com/flexbox-gap
+    gap: 0.5em;
+
+    .item-list & { // Specificity.
+      margin-bottom: 0;
+    }
+
+    .item-list &-item { // Specificity.
+      margin-bottom: 0;
+    }
+  }
+}

@@ -1,0 +1,4 @@
+'build omnipedia_changes':
+  title: 'Build wiki page changes'
+  description: 'Whether a user can access the functionality to build wiki page changes on demand. This is primarily intended for development and debugging and should only be assigned to trusted roles as it could cause performance issues if given publicly.'
+

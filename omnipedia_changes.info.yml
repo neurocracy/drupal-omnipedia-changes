@@ -1,0 +1,14 @@
+name: Omnipedia - Changes
+type: module
+description: Provides the wiki page changes functionality for Omnipedia.
+package: Omnipedia
+core_version_requirement: ^9
+
+dependencies:
+  - ambientimpact_core:ambientimpact_core
+  - drupal:node
+  - drupal:user
+  - diff:diff
+  - omnipedia_core:omnipedia_core
+  - pcb:pcb
+  - warmer:warmer

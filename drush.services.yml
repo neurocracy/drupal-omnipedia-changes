@@ -1,0 +1,7 @@
+services:
+
+  omnipedia_changes.build_changes:
+    class: Drupal\omnipedia_changes\Commands\OmnipediaBuildChangesCommand
+    arguments: ['@omnipedia.wiki_node_changes_cache']
+    tags:
+      - { name: drush.command }

@@ -1,0 +1,16 @@
+entity.node.omnipedia_changes:
+  path: '/node/{node}/changes'
+  defaults:
+    _title_callback: '\Drupal\omnipedia_changes\Controller\OmnipediaWikiNodeChangesController::title'
+    _controller: '\Drupal\omnipedia_changes\Controller\OmnipediaWikiNodeChangesController::view'
+  requirements:
+    node: \d+
+    _custom_access: '\Drupal\omnipedia_changes\Controller\OmnipediaWikiNodeChangesController::access'
+
+entity.node.omnipedia_changes.build:
+  path: '/node/{node}/changes/build'
+  defaults:
+    _controller: '\Drupal\omnipedia_changes\Controller\OmnipediaWikiNodeChangesController::viewBuild'
+  requirements:
+    node: \d+
+    _custom_access: '\Drupal\omnipedia_changes\Controller\OmnipediaWikiNodeChangesController::accessBuild'

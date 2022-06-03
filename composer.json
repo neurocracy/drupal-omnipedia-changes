@@ -1,0 +1,29 @@
+{
+  "name": "drupal/omnipedia_changes",
+  "description": "Omnipedia - Content changes",
+  "type": "project",
+  "license": "GPL-2.0-or-later",
+  "authors": [
+    {
+      "name": "Ambient.Impact",
+      "homepage": "https://ambientimpact.com/",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "caxy/php-htmldiff": "^0.1.12",
+    "drupal/diff": "^1.0",
+    "drupal/pcb": "^2.3",
+    "drupal/queue_ui": "^2.2",
+    "drupal/warmer": "^2.0",
+    "symfony/css-selector": "^3.4 || ^4.4",
+    "symfony/dom-crawler": "^3.4 || ^4.4"
+  },
+  "extra": {
+    "drush": {
+      "services": {
+        "drush.services.yml": "^10"
+      }
+    }
+  }
+}

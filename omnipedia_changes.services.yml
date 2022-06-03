@@ -1,0 +1,94 @@
+services:
+
+  # The Omnipedia wiki node changes cache bin.
+  cache.omnipedia_wiki_node_changes:
+    class: Drupal\Core\Cache\CacheBackendInterface
+    tags:
+      - { name: cache.bin, default_backend: cache.backend.permanent_database }
+    factory: cache_factory:get
+    arguments: [omnipedia_wiki_node_changes]
+
+  # Our logger channel.
+  logger.channel.omnipedia_changes:
+    class: Drupal\Core\Logger\LoggerChannel
+    factory: logger.factory:get
+    arguments: ['omnipedia_changes']
+
+  # The Omnipedia changes help service.
+  omnipedia_changes.help:
+    class: Drupal\omnipedia_changes\Service\Help
+    arguments:
+      - '@string_translation'
+
+  # The Omnipedia wiki node changes builder service.
+  omnipedia.wiki_node_changes_builder:
+    class: Drupal\omnipedia_changes\Service\WikiNodeChangesBuilder
+    arguments:
+      - '@entity_type.manager'
+      - '@event_dispatcher'
+      - '@diff.html_diff'
+      - '@renderer'
+      - '@string_translation'
+      - '@omnipedia.wiki_node_changes_cache'
+      - '@omnipedia.wiki_node_changes_info'
+
+  # The Omnipedia wiki node changes cache service.
+  omnipedia.wiki_node_changes_cache:
+    class: Drupal\omnipedia_changes\Service\WikiNodeChangesCache
+    arguments:
+      - '@cache.omnipedia_wiki_node_changes'
+      - '@cache_tags.invalidator'
+      - '@omnipedia.wiki_node_changes_info'
+
+  # The Omnipedia wiki node changes info service.
+  omnipedia.wiki_node_changes_info:
+    class: Drupal\omnipedia_changes\Service\WikiNodeChangesInfo
+    arguments:
+      - '@cache_contexts_manager'
+      - '@entity_type.manager'
+      - '@omnipedia.wiki_node_changes_user'
+
+  # The Omnipedia wiki node changes user service.
+  omnipedia.wiki_node_changes_user:
+    class: Drupal\omnipedia_changes\Service\WikiNodeChangesUser
+    arguments:
+      - '@current_user'
+      - '@cache.default'
+      - '@entity_type.manager'
+      - '@user_permissions_hash_generator'
+
+  # Event subscriber to prepare wiki node changes diff content for alterations.
+  omnipedia_changes.diff_prepare_event_subscriber:
+    class: Drupal\omnipedia_changes\EventSubscriber\Omnipedia\Changes\DiffPrepareEventSubscriber
+    tags:
+      - { name: 'event_subscriber', priority: -25 }
+
+# Event subscriber to alter any changed wiki node changes diff content.
+  omnipedia_changes.diff_alter_changed_content_event_subscriber:
+    class: Drupal\omnipedia_changes\EventSubscriber\Omnipedia\Changes\DiffAlterChangedContentEventSubscriber
+    tags:
+      - { name: 'event_subscriber', priority: -20 }
+
+  # Event subscriber to alter any added wiki node changes diff content.
+  omnipedia_changes.diff_alter_added_content_event_subscriber:
+    class: Drupal\omnipedia_changes\EventSubscriber\Omnipedia\Changes\DiffAlterAddedContentEventSubscriber
+    tags:
+      - { name: 'event_subscriber', priority: -15 }
+
+  # Event subscriber to alter any removed wiki node changes diff content.
+  omnipedia_changes.diff_alter_removed_content_event_subscriber:
+    class: Drupal\omnipedia_changes\EventSubscriber\Omnipedia\Changes\DiffAlterRemovedContentEventSubscriber
+    tags:
+      - { name: 'event_subscriber', priority: -10 }
+
+  # Event subscriber to alter any links in the wiki node changes diff content.
+  omnipedia_changes.diff_alter_links_event_subscriber:
+    class: Drupal\omnipedia_changes\EventSubscriber\Omnipedia\Changes\DiffAlterLinksEventSubscriber
+    tags:
+      - { name: 'event_subscriber', priority: -5 }
+
+  # Event subscriber to clean up any unaltered wiki node changes diff content.
+  omnipedia_changes.diff_clean_up_event_subscriber:
+    class: Drupal\omnipedia_changes\EventSubscriber\Omnipedia\Changes\DiffCleanUpEventSubscriber
+    tags:
+      - { name: 'event_subscriber', priority: 20 }

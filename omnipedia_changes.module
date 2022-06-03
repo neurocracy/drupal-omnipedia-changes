@@ -1,0 +1,14 @@
+<?php
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements \hook_help().
+ */
+function omnipedia_changes_help(
+  $routeName, RouteMatchInterface $routeMatch
+) {
+  return \Drupal::service('omnipedia_changes.help')->help(
+    $routeName, $routeMatch
+  );
+}
