@@ -1,0 +1,6 @@
+# Ignore any Node.js modules, as they're downloaded via NPM.
+node_modules
+
+# Ignore generated CSS files and their associated map files.
+**/*.css
+**/*.css.map
