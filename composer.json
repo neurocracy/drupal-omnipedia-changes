@@ -11,6 +11,7 @@
     }
   ],
   "require": {
+    "php": "^8",
     "caxy/php-htmldiff": "^0.1.12",
     "drupal/diff": "^1.0",
     "drupal/pcb": "^2.3",
