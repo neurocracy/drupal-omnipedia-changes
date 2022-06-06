@@ -2,7 +2,7 @@
   "name": "drupal-omnipedia-changes",
   "version": "3.0.0",
   "license": "GPL-2.0",
-  "repository": "gitlab:neurocracy/omnipedia/drupal-modules",
+  "repository": "github:neurocracy/drupal-omnipedia-changes",
   "devDependencies": {
     "@lodder/grunt-postcss": "^3.0.1",
     "autoprefixer": "^10.2.5",
