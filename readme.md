@@ -1,5 +1,6 @@
-This contains the source files for the "[Omnipedia](https://omnipedia.app/) -
-Changes" Drupal module.
+This contains the source files for the "*Omnipedia - Changes*" Drupal module,
+which provides the wiki page changes functionality for
+[Omnipedia](https://omnipedia.app/).
 
 ⚠️⚠️⚠️ ***Here be potential spoilers. Proceed at your own risk.*** ⚠️⚠️⚠️
 
