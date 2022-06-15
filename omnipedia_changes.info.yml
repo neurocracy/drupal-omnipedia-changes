@@ -10,5 +10,6 @@ dependencies:
   - drupal:user
   - diff:diff
   - omnipedia_core:omnipedia_core
+  - omnipedia_date:omnipedia_date
   - pcb:pcb
   - warmer:warmer

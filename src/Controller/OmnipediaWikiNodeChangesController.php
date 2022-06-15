@@ -13,7 +13,7 @@ use Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
-use Drupal\omnipedia_core\Service\TimelineInterface;
+use Drupal\omnipedia_date\Service\TimelineInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -40,7 +40,7 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
   /**
    * The Omnipedia timeline service.
    *
-   * @var \Drupal\omnipedia_core\Service\TimelineInterface
+   * @var \Drupal\omnipedia_date\Service\TimelineInterface
    */
   protected $timeline;
 
@@ -74,7 +74,7 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
    * @param \Psr\Log\LoggerInterface $loggerChannel
    *   Our logger channel.
    *
-   * @param \Drupal\omnipedia_core\Service\TimelineInterface $timeline
+   * @param \Drupal\omnipedia_date\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder
