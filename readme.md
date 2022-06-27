@@ -23,3 +23,7 @@ part of this codebase is useful or will inspire someone out there.
 * PHP 8
 
 * [Composer](https://getcomposer.org/)
+
+## Drupal dependencies
+
+* The [```ambientimpact_core``` module](https://github.com/Ambient-Impact/drupal-modules) must be present.
