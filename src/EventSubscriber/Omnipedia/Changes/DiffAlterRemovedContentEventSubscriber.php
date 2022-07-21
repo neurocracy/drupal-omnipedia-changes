@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\omnipedia_changes\EventSubscriber\Omnipedia\Changes;
 
 use Drupal\omnipedia_changes\Event\Omnipedia\Changes\DiffPostBuildEvent;
