@@ -28,6 +28,8 @@ part of this codebase is useful or will inspire someone out there.
 
 * The [```ambientimpact_core``` module](https://github.com/Ambient-Impact/drupal-modules) must be present.
 
+* The [`drupal/omnipedia_core`](https://github.com/neurocracy/drupal-omnipedia-core) and [`drupal/omnipedia_date`](https://github.com/neurocracy/drupal-omnipedia-date) modules must be present.
+
 ----
 
 # Installation
