@@ -121,8 +121,7 @@ continue to show the previously rendered changes for a few minutes until the
 cron process runs, in an attempt to always show something rather than the
 fallback placeholder. It then renders and caches a separate version for every
 unique user permissions hash, as different users may have different permissions,
-e.g. authors can see contextual links to edit various things that the usual user
-does not have access to.
+e.g. authors can see contextual links to edit parts of the content.
 
 So why did we engineer this complicated asynchronous rendering and caching? Most
 changes only take a few seconds to generate, but a few pages could take upwards
