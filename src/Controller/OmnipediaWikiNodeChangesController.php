@@ -37,35 +37,35 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
    *
    * @var \Psr\Log\LoggerInterface
    */
-  protected $loggerChannel;
+  protected LoggerInterface $loggerChannel;
 
   /**
    * The Omnipedia timeline service.
    *
    * @var \Drupal\omnipedia_date\Service\TimelineInterface
    */
-  protected $timeline;
+  protected TimelineInterface $timeline;
 
   /**
    * The Omnipedia wiki node changes builder service.
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface
    */
-  protected $wikiNodeChangesBuilder;
+  protected WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder;
 
   /**
    * The Omnipedia wiki node changes cache service.
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface
    */
-  protected $wikiNodeChangesCache;
+  protected WikiNodeChangesCacheInterface $wikiNodeChangesCache;
 
   /**
    * The Omnipedia wiki node changes info service.
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface
    */
-  protected $wikiNodeChangesInfo;
+  protected WikiNodeChangesInfoInterface $wikiNodeChangesInfo;
 
   /**
    * Constructs this controller; saves dependencies.

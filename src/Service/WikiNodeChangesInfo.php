@@ -7,10 +7,13 @@ namespace Drupal\omnipedia_changes\Service;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\node\NodeStorageInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface;
 use Drupal\omnipedia_core\Entity\Node;
 use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\user\RoleStorageInterface;
+use Drupal\user\UserStorageInterface;
 
 /**
  * The Omnipedia wiki node changes info service.
@@ -22,35 +25,35 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
    *
    * @var \Drupal\Core\Cache\Context\CacheContextsManager
    */
-  protected $cacheContextsManager;
+  protected CacheContextsManager $cacheContextsManager;
 
   /**
    * The Drupal node entity storage.
    *
    * @var \Drupal\node\NodeStorageInterface
    */
-  protected $nodeStorage;
+  protected NodeStorageInterface $nodeStorage;
 
   /**
    * The Drupal user role entity storage.
    *
    * @var \Drupal\user\RoleStorageInterface
    */
-  protected $roleStorage;
+  protected RoleStorageInterface $roleStorage;
 
   /**
    * The Drupal user entity storage.
    *
    * @var \Drupal\user\UserStorageInterface
    */
-  protected $userStorage;
+  protected UserStorageInterface $userStorage;
 
   /**
    * The Omnipedia wiki node changes user service.
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface
    */
-  protected $wikiNodeChangesUser;
+  protected WikiNodeChangesUserInterface $wikiNodeChangesUser;
 
   /**
    * Service constructor; saves dependencies.

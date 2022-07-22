@@ -18,7 +18,7 @@ class DiffPostBuildEvent extends AbstractDiffEvent {
    *
    * @var \Symfony\Component\DomCrawler\Crawler
    */
-  protected $crawler;
+  protected Crawler $crawler;
 
   /**
    * {@inheritdoc}

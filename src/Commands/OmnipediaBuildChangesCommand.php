@@ -26,7 +26,7 @@ class OmnipediaBuildChangesCommand extends DrushCommands implements SiteAliasMan
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface
    */
-  protected $wikiNodeChangesCache;
+  protected WikiNodeChangesCacheInterface $wikiNodeChangesCache;
 
   /**
    * Constructs this command; saves dependencies.

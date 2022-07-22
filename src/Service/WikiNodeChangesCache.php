@@ -25,21 +25,21 @@ class WikiNodeChangesCache implements WikiNodeChangesCacheInterface {
    *
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
    */
-  protected $cacheTagsInvalidator;
+  protected CacheTagsInvalidatorInterface $cacheTagsInvalidator;
 
   /**
    * The Omnipedia wiki node changes cache bin.
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $changesCache;
+  protected CacheBackendInterface $changesCache;
 
   /**
    * The Omnipedia wiki node changes info service.
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface
    */
-  protected $wikiNodeChangesInfo;
+  protected WikiNodeChangesInfoInterface $wikiNodeChangesInfo;
 
   /**
    * Service constructor; saves dependencies.

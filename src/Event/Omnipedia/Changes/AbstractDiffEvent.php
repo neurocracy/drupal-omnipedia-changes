@@ -17,28 +17,28 @@ abstract class AbstractDiffEvent extends Event {
    *
    * @var \Drupal\omnipedia_core\Entity\NodeInterface
    */
-  protected $currentNode;
+  protected NodeInterface $currentNode;
 
   /**
    * The previous wiki node object.
    *
    * @var \Drupal\omnipedia_core\Entity\NodeInterface
    */
-  protected $previousNode;
+  protected NodeInterface $previousNode;
 
   /**
    * The current wiki node revision rendered as HTML.
    *
    * @var string
    */
-  protected $currentRendered;
+  protected string $currentRendered;
 
   /**
    * The previous wiki node revision rendered as HTML.
    *
    * @var string
    */
-  protected $previousRendered;
+  protected string $previousRendered;
 
   /**
    * Constructs this event object.

@@ -36,42 +36,42 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
    *
    * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected $entityTypeManager;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The Symfony event dispatcher service.
    *
    * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
    */
-  protected $eventDispatcher;
+  protected EventDispatcherInterface $eventDispatcher;
 
   /**
    * The HTML diff service provided by the Diff module.
    *
    * @var \HtmlDiffAdvancedInterface
    */
-  protected $htmlDiff;
+  protected HtmlDiffAdvancedInterface $htmlDiff;
 
   /**
    * The Drupal renderer service.
    *
    * @var \Drupal\Core\Render\RendererInterface
    */
-  protected $renderer;
+  protected RendererInterface $renderer;
 
   /**
    * The Omnipedia wiki node changes cache service.
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface
    */
-  protected $wikiNodeChangesCache;
+  protected WikiNodeChangesCacheInterface $wikiNodeChangesCache;
 
   /**
    * The Omnipedia wiki node changes info service.
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface
    */
-  protected $wikiNodeChangesInfo;
+  protected WikiNodeChangesInfoInterface $wikiNodeChangesInfo;
 
   /**
    * Service constructor; saves dependencies.

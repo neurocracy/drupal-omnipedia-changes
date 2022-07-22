@@ -50,70 +50,70 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
    *   flattened - instead of keying by node ID (nid), we key by node ID and
    *   roles, to allow for easy counting of progress.
    */
-  protected $cacheIds;
+  protected array $cacheIds;
 
   /**
    * All user role entities, keyed by role ID (rid).
    *
    * @var \Drupal\user\RoleInterface[]
    */
-  protected $allRoles;
+  protected array $allRoles;
 
   /**
    * The Drupal account switcher service.
    *
    * @var \Drupal\Core\Session\AccountSwitcherInterface
    */
-  protected $accountSwitcher;
+  protected AccountSwitcherInterface $accountSwitcher;
 
   /**
    * Our logger channel.
    *
    * @var \Psr\Log\LoggerInterface
    */
-  protected $loggerChannel;
+  protected LoggerInterface $loggerChannel;
 
   /**
    * The Drupal node entity storage.
    *
    * @var \Drupal\node\NodeStorageInterface
    */
-  protected $nodeStorage;
+  protected NodeStorageInterface $nodeStorage;
 
   /**
    * The Drupal user role entity storage.
    *
    * @var \Drupal\user\RoleStorageInterface
    */
-  protected $roleStorage;
+  protected RoleStorageInterface $roleStorage;
 
   /**
    * The Drupal user entity storage.
    *
    * @var \Drupal\user\UserStorageInterface
    */
-  protected $userStorage;
+  protected UserStorageInterface $userStorage;
 
   /**
    * The Omnipedia wiki node changes builder service.
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface
    */
-  protected $wikiNodeChangesBuilder;
+  protected WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder;
 
   /**
    * The Omnipedia wiki node changes info service.
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface
    */
-  protected $wikiNodeChangesInfo;
+  protected WikiNodeChangesInfoInterface $wikiNodeChangesInfo;
 
   /**
    * The Omnipedia wiki node changes user service.
    *
    * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface
    */
-  protected $wikiNodeChangesUser;
+  protected WikiNodeChangesUserInterface $wikiNodeChangesUser;
 
   /**
    * {@inheritdoc}

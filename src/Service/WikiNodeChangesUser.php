@@ -12,7 +12,9 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\Session\PermissionsHashGeneratorInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\user\RoleStorageInterface;
 use Drupal\user\UserInterface;
+use Drupal\user\UserStorageInterface;
 
 /**
  * The Omnipedia wiki node changes user service.
@@ -32,14 +34,14 @@ class WikiNodeChangesUser implements WikiNodeChangesUserInterface {
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  protected $defaultCache;
+  protected CacheBackendInterface $defaultCache;
 
   /**
    * The current user proxy service.
    *
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
-  protected $currentUser;
+  protected AccountProxyInterface $currentUser;
 
   /**
    * All user role entities, keyed by role ID (rid).
@@ -48,28 +50,28 @@ class WikiNodeChangesUser implements WikiNodeChangesUserInterface {
    *
    * @see $this->getAllRoles()
    */
-  protected $allRoles;
+  protected array $allRoles;
 
   /**
    * The Drupal user permissions hash generator.
    *
    * @var \Drupal\Core\Session\PermissionsHashGeneratorInterface
    */
-  protected $permissionsHashGenerator;
+  protected PermissionsHashGeneratorInterface $permissionsHashGenerator;
 
   /**
    * The Drupal user role entity storage.
    *
    * @var \Drupal\user\RoleStorageInterface
    */
-  protected $roleStorage;
+  protected RoleStorageInterface $roleStorage;
 
   /**
    * The Drupal user entity storage.
    *
    * @var \Drupal\user\UserStorageInterface
    */
-  protected $userStorage;
+  protected UserStorageInterface $userStorage;
 
   /**
    * Service constructor; saves dependencies.
