@@ -122,6 +122,7 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
     ContainerInterface $container,
     array $configuration, $pluginId, $pluginDefinition
   ) {
+
     /** @var \Drupal\warmer\Plugin\WarmerInterface */
     $instance = parent::create(
       $container, $configuration, $pluginId, $pluginDefinition
@@ -160,6 +161,7 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
     );
 
     return $instance;
+
   }
 
   /**
@@ -254,6 +256,7 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
+
     /** @var array */
     $config = parent::defaultConfiguration();
 
@@ -261,6 +264,7 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
     $config['batchSize'] = 5;
 
     return $config;
+
   }
 
   /**

@@ -10,7 +10,9 @@ use Drupal\Core\Routing\RouteMatchInterface;
 function omnipedia_changes_help(
   $routeName, RouteMatchInterface $routeMatch
 ) {
+
   return \Drupal::service('omnipedia_changes.help')->help(
     $routeName, $routeMatch
   );
+
 }
