@@ -26,13 +26,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class OmnipediaWikiNodeChangesController extends ControllerBase {
 
   /**
-   * The current user proxy service.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected $currentUser;
-
-  /**
    * Our logger channel.
    *
    * @var \Psr\Log\LoggerInterface
