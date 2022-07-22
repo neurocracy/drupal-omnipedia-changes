@@ -53,7 +53,7 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
   protected $wikiNodeChangesUser;
 
   /**
-   * Constructs this service object.
+   * Service constructor; saves dependencies.
    *
    * @param \Drupal\Core\Cache\Context\CacheContextsManager $cacheContextsManager
    *   The Drupal cache contexts manager.
@@ -70,7 +70,6 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
     WikiNodeChangesUserInterface  $wikiNodeChangesUser
   ) {
 
-    // Save dependencies.
     $this->cacheContextsManager = $cacheContextsManager;
     $this->nodeStorage          = $entityTypeManager->getStorage('node');
     $this->roleStorage          = $entityTypeManager->getStorage('user_role');

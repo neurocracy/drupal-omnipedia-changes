@@ -74,7 +74,7 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
   protected $wikiNodeChangesInfo;
 
   /**
-   * Constructs this service object.
+   * Service constructor; saves dependencies.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The Drupal entity type manager.
@@ -109,7 +109,6 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
     WikiNodeChangesInfoInterface  $wikiNodeChangesInfo
   ) {
 
-    // Save dependencies.
     $this->entityTypeManager    = $entityTypeManager;
     $this->eventDispatcher      = $eventDispatcher;
     $this->htmlDiff             = $htmlDiff;

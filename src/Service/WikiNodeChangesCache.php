@@ -42,7 +42,7 @@ class WikiNodeChangesCache implements WikiNodeChangesCacheInterface {
   protected $wikiNodeChangesInfo;
 
   /**
-   * Constructs this service object.
+   * Service constructor; saves dependencies.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $changesCache
    *   The Omnipedia wiki node changes cache bin.
@@ -59,7 +59,6 @@ class WikiNodeChangesCache implements WikiNodeChangesCacheInterface {
     WikiNodeChangesInfoInterface  $wikiNodeChangesInfo
   ) {
 
-    // Save dependencies.
     $this->changesCache         = $changesCache;
     $this->cacheTagsInvalidator = $cacheTagsInvalidator;
     $this->wikiNodeChangesInfo  = $wikiNodeChangesInfo;

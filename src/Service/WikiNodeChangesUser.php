@@ -72,7 +72,7 @@ class WikiNodeChangesUser implements WikiNodeChangesUserInterface {
   protected $userStorage;
 
   /**
-   * Constructs this service object.
+   * Service constructor; saves dependencies.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $defaultCache
    *   The default Drupal cache bin.
@@ -93,7 +93,6 @@ class WikiNodeChangesUser implements WikiNodeChangesUserInterface {
     PermissionsHashGeneratorInterface $permissionsHashGenerator
   ) {
 
-    // Save dependencies.
     $this->currentUser              = $currentUser;
     $this->defaultCache             = $defaultCache;
     $this->permissionsHashGenerator = $permissionsHashGenerator;
