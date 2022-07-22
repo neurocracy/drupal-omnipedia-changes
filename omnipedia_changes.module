@@ -2,14 +2,15 @@
 
 declare(strict_types=1);
 
+use Drupal\Component\Render\MarkupInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements \hook_help().
  */
 function omnipedia_changes_help(
-  $routeName, RouteMatchInterface $routeMatch
-) {
+  string $routeName, RouteMatchInterface $routeMatch
+): MarkupInterface|array|string {
 
   return \Drupal::service('omnipedia_changes.help')->help(
     $routeName, $routeMatch
