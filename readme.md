@@ -131,3 +131,11 @@ of 30 seconds to generate, during which time you would be presented with a page
 that wasn't loading. We saw this as very poor UX, and doing all of this ahead of
 time while trying really hard to show something, even if it was out of date, was
 our solution.
+
+----
+
+# Planned improvements
+
+* [Refactor changes rendering to generate temporary user accounts instead of using existing accounts](https://github.com/neurocracy/drupal-omnipedia-changes/issues/1)
+
+* [Refactor `OmnipediaWikiNodeChangesController` to no longer extend `ControllerBase`](https://github.com/neurocracy/drupal-omnipedia-changes/issues/2)
