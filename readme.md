@@ -111,11 +111,12 @@ two in-universe dates. This process is completely automated, and is built on top
 of the [`caxy/php-htmldiff` library](https://github.com/caxy/php-htmldiff), with
 [many alterations](/src/EventSubscriber/Omnipedia/Changes) made to its output.
 The actual changes [are built asynchronously in a separate
-process](/src/Plugin/warmer/WikiNodeChangesWarmer.php), running as cron job
-implemented as a [Warmer module](https://www.drupal.org/project/warmer) plug-in,
-and cached to a [Permanent Cache Bin](https://www.drupal.org/project/pcb) so
-that it survives any Drupal cache clear that may be required when deploying
-updated code (though we try to minimize cache clears).
+process](/src/Plugin/warmer/WikiNodeChangesWarmer.php), running as [a cron
+job](https://en.wikipedia.org/wiki/Cron) implemented as a [Warmer
+module](https://www.drupal.org/project/warmer) plug-in, and cached to a
+[Permanent Cache Bin](https://www.drupal.org/project/pcb) so that it survives
+any Drupal cache clear that may be required when deploying updated code (though
+we try to minimize cache clears).
 
 When a wiki page is updated by an author, the [changes route
 controller](/src/Controller/OmnipediaWikiNodeChangesController.php) will
