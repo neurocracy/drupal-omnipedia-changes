@@ -107,31 +107,85 @@ To build specific things:
 # Description
 
 This contains our infrastructure for generating the wiki page changes between
-two in-universe dates. This process is completely automated, and is built on top
-of the [`caxy/php-htmldiff` library](https://github.com/caxy/php-htmldiff), with
-[many alterations](/src/EventSubscriber/Omnipedia/Changes) made to its output.
-The actual changes [are built asynchronously in a separate
-process](/src/Plugin/warmer/WikiNodeChangesWarmer.php), running as [a cron
-job](https://en.wikipedia.org/wiki/Cron) implemented as a [Warmer
-module](https://www.drupal.org/project/warmer) plug-in, and cached to a
-[Permanent Cache Bin](https://www.drupal.org/project/pcb) so that it survives
-any Drupal cache clear that may be required when deploying updated code (though
-we try to minimize cache clears).
+two in-universe dates. We realized early on in development that the sheer amount
+of content that editors would have to deal with would become a nightmare to
+manage and keep track of if they also had to manually mark up the changes, and
+this problem would only become exponentially worse the more content and dates
+were added. A completely automated solution to generate these changes was a
+must.
 
-When a wiki page is updated by an author, the [changes route
-controller](/src/Controller/OmnipediaWikiNodeChangesController.php) will
-continue to show the previously rendered changes for a few minutes until the
-cron process runs, in an attempt to always show something rather than the
-fallback placeholder. It then renders and caches a separate version for every
-unique user permissions hash, as different users may have different permissions,
-e.g. authors can see contextual links to edit parts of the content.
+## Under the hood
 
-So why did we engineer this complicated asynchronous rendering and caching? Most
-changes only take a few seconds to generate, but a few pages could take upwards
-of 30 seconds to generate, during which time you would be presented with a page
-that wasn't loading. We saw this as very poor UX, and doing all of this ahead of
-time while trying really hard to show something, even if it was out of date, was
-our solution.
+One major problem when dealing with trying to generate a diff between two
+strings that are HTML is that a lot of libraries out there don't actually
+understand HTML elements and would mangle the HTML structure in expected and
+unexpected ways. We could render the HTML as plain text, without the HTML
+elements, but that would require somehow reconstructing the HTML on top of a
+diff, which did not seem remotely practical. What we needed was a library that
+understands HTML and where elements start and end. After a bit of research, we
+looked into what [the Diff module](https://www.drupal.org/project/diff) uses,
+and found our solution: the [`caxy/php-htmldiff`
+library](https://github.com/caxy/php-htmldiff).
+
+After solving that initial problem, we needed to customize the output of the
+library, but it didn't offer any useful way to do this before it rendered its
+diffs. The solution we settled on, like many other things on Omnipedia, was to
+parse the rendered diffed HTML into a
+[DOM](https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model)
+and manipulate it using [the Symfony DomCrawler
+component](https://symfony.com/doc/current/components/dom_crawler.html) and
+[PHP's DOM](https://www.php.net/manual/en/book.dom.php) classes that it wraps.
+
+The core code that orchestrates all of this is [the wiki changes builder
+service](/src/Service/WikiNodeChangesBuilder.php), which configures the
+`caxy/php-htmldiff` instance, validates that a wiki page can have a diff (i.e.
+has a previous in-universe date to diff against), returns a cached copy if one
+is found, or renders the actual diff and dispatches events both before the diff
+is generated and after. Once that core system was in place, we wrote [several
+event subscribers](/src/EventSubscriber/Omnipedia/Changes) to alter the output
+to our requirements.
+
+### Asynchronicity
+
+It's at this point that we ran into a serious problem: while uncached changes
+for most wiki pages would take a second or two to generate and be sent to the
+browser, a few outliers would consistently take far longer, up to 30 seconds or
+more. We were hitting the limits of what the library and PHP could handle, even
+after [some excellent work by the library maintainer to improve
+performance](https://github.com/caxy/php-htmldiff/issues/101).
+
+The solution to this required significantly more engineering. The server was
+fully capable of generating the wiki page changes, so what we had to do was to
+render those changes independently of when they were requested; they would have
+to be rendered ahead of time, asynchronously, in a separate process. [Drupal
+core has a queue
+system](https://api.drupal.org/api/drupal/core!core.api.php/group/queue) that
+allows for batch processing, which [the Warmer
+module](https://www.drupal.org/project/warmer) builds on top of to allow for
+performing cache warming tasks.
+
+[We wrote our own custom Warmer
+plug-in](/src/Plugin/warmer/WikiNodeChangesWarmer.php) which is invoked via [a
+cron job](https://en.wikipedia.org/wiki/Cron) that runs multiple times an hour.
+The plug-in determines all possible variations a set of changes would need to be
+rendered in, specifically different sets of user permissions, and then renders
+them one by one. These are then cached to a [Permanent Cache
+Bin](https://www.drupal.org/project/pcb) so that they survive any Drupal cache
+clear that may be required when deploying updated code (though we try to
+minimize cache clears).
+
+### All together now
+
+While all of this is happening in the background process, [the changes route
+controller](/src/Controller/OmnipediaWikiNodeChangesController.php) was
+rewritten to handle three possible states so that it always returns a fast
+response to the browser:
+
+1. If no changes have been built between the requested couple of dates, it will show a placeholder message telling the user to check back in a few minutes; it doesn't risk trying to build the changes and potentially make the user wait a long time to see them.
+
+2. If changes have been built, but one of the two wiki pages was updated and thus the changes [cache item was invalidated](https://api.drupal.org/api/drupal/core!core.api.php/group/cache#delete) and the cron job hasn't run yet, it will show the old (invalidated) cache item.
+
+3. If changes have been built and the cache item is valid, it will show that item.
 
 ----
 
