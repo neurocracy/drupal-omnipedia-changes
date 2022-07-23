@@ -107,10 +107,10 @@ To build specific things:
 # Description
 
 This contains our infrastructure for generating the wiki page changes between
-two in-universe dates. This is process is completely automated, and is built on
-top of the [`caxy/php-htmldiff` library](https://github.com/caxy/php-htmldiff),
-with [many alterations](/src/EventSubscriber/Omnipedia/Changes) made to its
-output. The actual changes [are built asynchronously in a separate
+two in-universe dates. This process is completely automated, and is built on top
+of the [`caxy/php-htmldiff` library](https://github.com/caxy/php-htmldiff), with
+[many alterations](/src/EventSubscriber/Omnipedia/Changes) made to its output.
+The actual changes [are built asynchronously in a separate
 process](/src/Plugin/warmer/WikiNodeChangesWarmer.php), running as cron job
 implemented as a [Warmer module](https://www.drupal.org/project/warmer) plug-in,
 and cached to a [Permanent Cache Bin](https://www.drupal.org/project/pcb) so
