@@ -12,6 +12,5 @@
     "postcss": "^8.2.15",
     "sass": "^1.43.4",
     "sass-module-importer": "^1.4.0"
-  },
-  "dependencies": {}
+  }
 }
