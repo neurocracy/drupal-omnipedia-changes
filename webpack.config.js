@@ -2,13 +2,11 @@
 
 const autoprefixer = require('autoprefixer');
 const componentPaths = require('ambientimpact-drupal-modules/componentPaths');
+const Encore = require('@symfony/webpack-encore');
 const glob = require('glob');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const path = require('path');
 const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
-const SourceMapDevToolPlugin = require('webpack/lib/SourceMapDevToolPlugin');
-
-const isDev = (process.env.NODE_ENV !== 'production');
 
 const distPath = '.webpack-dist';
 
@@ -51,95 +49,77 @@ function getGlobbedEntries() {
 
 };
 
-/**
- * Array of plug-in instances to pass to Webpack.
- *
- * @type {Array}
- */
-let plugins = [
-  new RemoveEmptyScriptsPlugin(),
-  new MiniCssExtractPlugin(),
-];
-
-if (isDev === true) {
-  plugins.push(
-    new SourceMapDevToolPlugin({
-      filename: '[file].map',
-    })
-  );
+// @see https://symfony.com/doc/current/frontend/encore/installation.html#creating-the-webpack-config-js-file
+if (!Encore.isRuntimeEnvironmentConfigured()) {
+  Encore.configureRuntimeEnvironment(process.env.NODE_ENV || 'dev');
 }
 
-module.exports = {
+Encore
+.setOutputPath(path.resolve(__dirname, (outputToSourcePaths ? '.' : distPath)))
 
-  mode:     isDev ? 'development' : 'production',
-  devtool:  isDev ? 'eval-cheap-module-source-map': false,
+// Encore will complain if the public path doesn't start with a slash.
+// Unfortunately, it doesn't seem Webpack's automatic public path works here.
+//
+// @see https://webpack.js.org/guides/public-path/#automatic-publicpath
+.setPublicPath('/')
+.setManifestKeyPrefix('')
 
-  entry: getGlobbedEntries,
+// We output multiple files.
+.disableSingleRuntimeChunk()
 
-  plugins: plugins,
+.configureFilenames({
 
-  output: {
+  // Since Webpack started out primarily for building JavaScript applications,
+  // it always outputs a JS files, even if empty. We place these in a temporary
+  // directory by default. Note that the 'webpack-remove-empty-scripts' plug-in
+  // should prevent these being output, but if there's an error while running
+  // Webpack, you'll get a nice 'temp' directory you can just delete.
+  js: 'temp/[name].js',
 
-    path: path.resolve(__dirname, (outputToSourcePaths ? '.' : distPath)),
+  // Assets are left at their original locations and not hashed. The [query]
+  // must be left in to ensure any query string specified in the CSS is
+  // preserved.
+  //
+  // @see https://stackoverflow.com/questions/68737296/disable-asset-bundling-in-webpack-5#68768905
+  //
+  // @see https://github.com/webpack-contrib/css-loader/issues/889#issuecomment-1298907914
+  assets: '[file][query]',
 
-    // Be very careful with this - if outputting to the source paths, this must
-    // not be true or it'll delete everything contained in the directory without
-    // warning.
-    clean: !outputToSourcePaths,
+})
+.addEntries(getGlobbedEntries())
 
-    // Since Webpack started out primarily for building JavaScript applications,
-    // it always outputs a JS files, even if empty. We place these in a
-    // temporary directory by default.
-    filename: 'temp/[name].js',
+// Clean out any previously built files in case of source files being removed or
+// renamed.
+.cleanupOutputBeforeBuild(['**/*.css', '**/*.css.map'])
 
-    // Assets are left at their original locations and not hashed. The [query]
-    // must be left in to ensure any query string specified in the CSS is
-    // preserved.
-    //
-    // @see https://stackoverflow.com/questions/68737296/disable-asset-bundling-in-webpack-5#68768905
-    //
-    // @see https://github.com/webpack-contrib/css-loader/issues/889#issuecomment-1298907914
-    assetModuleFilename: '[file][query]',
+.enableSourceMaps(!Encore.isProduction())
 
-  },
+// We don't use Babel so we can probably just remove all presets to speed it up.
+//
+// @see https://github.com/symfony/webpack-encore/issues/154#issuecomment-361277968
+.configureBabel(function(config) {
+  config.presets = [];
+})
 
-  module: {
-    rules: [
-      {
-        test: /\.(scss)$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              sourceMap: isDev,
-              importLoaders: 2,
-            },
-          },
-          {
-            loader: 'postcss-loader',
-            options: {
-              sourceMap: isDev,
-              postcssOptions: {
-                plugins: [
-                  autoprefixer(),
-                ],
-              },
-            },
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: isDev,
-              sassOptions: {
-                includePaths: componentPaths().all,
-              }
-            },
-          },
-        ],
-      },
+// Remove any empty scripts Webpack would generate as we aren't a primarily
+// JavaScript-based app and only output CSS and assets.
+.addPlugin(new RemoveEmptyScriptsPlugin())
+
+.enableSassLoader(function(options) {
+  options.sassOptions = {includePaths: componentPaths().all};
+})
+.enablePostCssLoader(function(options) {
+  options.postcssOptions = {
+    plugins: [
+      autoprefixer(),
     ],
-  },
-};
+  };
+})
+// Re-enable automatic public path for paths referenced in CSS.
+//
+// @see https://github.com/symfony/webpack-encore/issues/915#issuecomment-1189319882
+.configureMiniCssExtractPlugin(function(config) {
+  config.publicPath = 'auto';
+});
+
+module.exports = Encore.getWebpackConfig();
