@@ -140,7 +140,7 @@ should get you up and running.
 Then, in your root ```composer.json```, add the following to the
 ```"repositories"``` section:
 
-```
+```json
 {
   "type": "vcs",
   "url": "https://github.com/neurocracy/drupal-omnipedia-changes.git"
@@ -151,19 +151,45 @@ Then, in your project's root, run ```composer require
 "drupal/omnipedia_changes:3.x-dev@dev"``` to have Composer install the module
 and its required dependencies for you.
 
-## Building assets
+## Front-end assets
 
-To build assets for this project, you'll need to have
-[Node.js](https://nodejs.org/) installed.
+To build front-end assets for this project, you'll need to have
+[Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) installed.
 
-### Using ```nvm```
+This package makes use of [Yarn
+Workspaces](https://yarnpkg.com/features/workspaces) and references other local
+workspace dependencies. In the `package.json` in the root of your Drupal
+project, you'll need to add the following:
 
-We recommend using [Node Version Manager
-(```nvm```)](https://github.com/nvm-sh/nvm) ([Windows
-port](https://github.com/coreybutler/nvm-windows)) to ensure you're using the
-same version used to develop this codebase. Once ```nvm``` is installed, you can
-simply navigate to the project root and run ```nvm install``` to install the
-appropriate version contained in the ```.nvmrc``` file.
+```json
+"workspaces": [
+  "<web directory>/modules/custom/*",
+  "<web directory>/themes/custom/*"
+],
+```
+
+where `<web directory>` is your public Drupal directory name, `web` by default.
+Once those are defined, then add
+
+```json
+"drupal-omnipedia-block": "workspace:^3"
+```
+
+to the `"dependencies"` section of your top-level `package.json`. Then run
+`yarn install` and let Yarn do the rest.
+
+### Optional: install yarn.BUILD
+
+While not required, we recommend installing [yarn.BUILD](https://yarn.build/) to
+make building all of the front-end assets even easier.
+
+### Optional: use ```nvm```
+
+If you want to be sure you're using the same Node.js version we're using, we
+support using [Node Version Manager (```nvm```)](https://github.com/nvm-sh/nvm)
+([Windows port](https://github.com/coreybutler/nvm-windows)). Once ```nvm``` is
+installed, you can simply navigate to the project root and run ```nvm install```
+to install the appropriate version contained in the ```.nvmrc``` file.
 
 Note that if you're using the [Windows
 port](https://github.com/coreybutler/nvm-windows), it [does not support
@@ -172,25 +198,24 @@ files](https://github.com/coreybutler/nvm-windows/wiki/Common-Issues#why-isnt-nv
 so you'll have to provide the version contained in the ```.nvmrc``` as a
 parameter: ```nvm install <version>``` (without the ```<``` and ```>```).
 
-### Dependencies
+This step is not required, and may be dropped in the future as Node.js is fairly
+mature and stable at this point.
 
-Once Node.js is installed, run ```npm install``` in the project root to install
-all dependencies.
+# Building front-end assets
 
-### Grunt CLI
+We use [Webpack](https://webpack.js.org/) and [Symfony Webpack
+Encore](https://symfony.com/doc/current/frontend.html) to automate most of the
+build process. These will have been installed for you if you followed the Yarn
+installation instructions above.
 
-We also recommend installing the [Grunt
-CLI](https://gruntjs.com/getting-started) globally from the commandline:
-```npm install -g grunt-cli```
+If you have [yarn.BUILD](https://yarn.build/) installed, you can run:
 
-Note that if you use ```nvm```, this must be done for each Node.js version that
-you plan to use it for.
+```
+yarn build
+```
 
-# Building
+from the root of your Drupal site. If you want to build just this package, run:
 
-To build everything, you can run ```grunt all``` in the commandline in the
-project root.
-
-To build specific things:
-
-* ```grunt css``` - compiles CSS files from Sass; applies [Autoprefixer](https://github.com/postcss/autoprefixer).
+```
+yarn workspace drupal-omnipedia-changes run build
+```
