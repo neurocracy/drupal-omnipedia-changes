@@ -172,7 +172,7 @@ where `<web directory>` is your public Drupal directory name, `web` by default.
 Once those are defined, then add
 
 ```json
-"drupal-omnipedia-block": "workspace:^3"
+"drupal-omnipedia-changes": "workspace:^3"
 ```
 
 to the `"dependencies"` section of your top-level `package.json`. Then run
