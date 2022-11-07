@@ -123,6 +123,11 @@ response to the browser:
 
 * The [`drupal/omnipedia_core`](https://github.com/neurocracy/drupal-omnipedia-core) and [`drupal/omnipedia_date`](https://github.com/neurocracy/drupal-omnipedia-date) modules must be present.
 
+## Front-end dependencies
+
+To build front-end assets for this project, [Node.js](https://nodejs.org/) and
+[Yarn](https://yarnpkg.com/) are required.
+
 ----
 
 # Installation
