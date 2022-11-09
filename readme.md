@@ -158,8 +158,8 @@ and its required dependencies for you.
 
 ## Front-end assets
 
-To build front-end assets for this project, you'll need to have
-[Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/) installed.
+To build front-end assets for this project, you'll need to install
+[Node.js](https://nodejs.org/) and [Yarn](https://yarnpkg.com/).
 
 This package makes use of [Yarn
 Workspaces](https://yarnpkg.com/features/workspaces) and references other local
@@ -168,20 +168,19 @@ project, you'll need to add the following:
 
 ```json
 "workspaces": [
-  "<web directory>/modules/custom/*",
-  "<web directory>/themes/custom/*"
+  "<web directory>/modules/custom/*"
 ],
 ```
 
 where `<web directory>` is your public Drupal directory name, `web` by default.
-Once those are defined, then add
+Once those are defined, add the following to the `"dependencies"` section of
+your top-level `package.json`:
 
 ```json
 "drupal-omnipedia-changes": "workspace:^3"
 ```
 
-to the `"dependencies"` section of your top-level `package.json`. Then run
-`yarn install` and let Yarn do the rest.
+Then run `yarn install` and let Yarn do the rest.
 
 ### Optional: install yarn.BUILD
 
