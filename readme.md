@@ -205,6 +205,8 @@ parameter: ```nvm install <version>``` (without the ```<``` and ```>```).
 This step is not required, and may be dropped in the future as Node.js is fairly
 mature and stable at this point.
 
+----
+
 # Building front-end assets
 
 We use [Webpack](https://webpack.js.org/) and [Symfony Webpack
