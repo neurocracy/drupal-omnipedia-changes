@@ -1,6 +1,6 @@
 {
   "name": "drupal/omnipedia_changes",
-  "description": "Omnipedia - Content changes",
+  "description": "Omnipedia - Changes",
   "type": "drupal-custom-module",
   "license": "GPL-2.0-or-later",
   "authors": [
