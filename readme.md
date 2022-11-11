@@ -146,7 +146,7 @@ Then, in your root ```composer.json```, add the following to the
 ```"repositories"``` section:
 
 ```json
-{
+"drupal/omnipedia_changes": {
   "type": "vcs",
   "url": "https://github.com/neurocracy/drupal-omnipedia-changes.git"
 }
