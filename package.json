@@ -8,6 +8,7 @@
   },
   "yarn.build": {
     "input": [
+      "webpack.config.js",
       "**/components/**/*.scss"
     ],
     "output": [
