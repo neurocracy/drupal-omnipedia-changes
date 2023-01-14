@@ -119,9 +119,11 @@ response to the browser:
 
 ## Drupal dependencies
 
-* The [```ambientimpact_core``` module](https://github.com/Ambient-Impact/drupal-modules) must be present.
+Follow the Composer installation instructions for these dependencies first:
 
-* The [`drupal/omnipedia_core`](https://github.com/neurocracy/drupal-omnipedia-core) and [`drupal/omnipedia_date`](https://github.com/neurocracy/drupal-omnipedia-date) modules must be present.
+* The [`ambientimpact_core` module](https://github.com/Ambient-Impact/drupal-modules).
+
+* The [`omnipedia_core`](https://github.com/neurocracy/drupal-omnipedia-core) and [`omnipedia_date`](https://github.com/neurocracy/drupal-omnipedia-date) modules.
 
 ## Front-end dependencies
 
