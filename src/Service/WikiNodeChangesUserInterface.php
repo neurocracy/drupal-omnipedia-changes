@@ -42,7 +42,7 @@ interface WikiNodeChangesUserInterface {
    * permissions, we need a representative user for each variation.
    * Unfortuntely, attempting to create temporary users (i.e. that have not been
    * saved to the database) has not been successful; that approach would have
-   * been preferable to isolate/sandbox and potential security issues that could
+   * been preferable to isolate/sandbox any potential security issues that could
    * arise with rendering as an existing user.
    *
    * Creating the temporary users via the user entity storage, assigning the
