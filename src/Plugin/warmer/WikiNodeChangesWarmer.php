@@ -292,7 +292,14 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
 
       /** @var \Drupal\user\UserInterface|null */
       $renderUser = $this->representativeRenderUser->getUserToRenderAs(
-        \explode(',', $roles), $node, $previousNode
+        \explode(',', $roles),
+        function(UserInterface $user) use ($node, $previousNode) {
+          // Check that the provided user can access both the current and
+          // previous wiki nodes.
+          return $node->access('view', $user) && $previousNode->access(
+            'view', $user
+          );
+        }
       );
 
       // Skip this item if we couldn't find a user to render it as.
