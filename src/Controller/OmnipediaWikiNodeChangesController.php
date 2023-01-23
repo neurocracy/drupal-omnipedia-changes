@@ -13,7 +13,6 @@ use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
-use Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_date\Service\TimelineInterface;
 use Psr\Log\LoggerInterface;
@@ -80,9 +79,6 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
    *
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface $wikiNodeChangesInfo
    *   The Omnipedia wiki node changes info service.
-   *
-   * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface $wikiNodeChangesUser
-   *   The Omnipedia wiki node changes user service.
    */
   public function __construct(
     AccountProxyInterface           $currentUser,
@@ -90,8 +86,7 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
     TimelineInterface               $timeline,
     WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder,
     WikiNodeChangesCacheInterface   $wikiNodeChangesCache,
-    WikiNodeChangesInfoInterface    $wikiNodeChangesInfo,
-    WikiNodeChangesUserInterface    $wikiNodeChangesUser
+    WikiNodeChangesInfoInterface    $wikiNodeChangesInfo
   ) {
 
     $this->currentUser            = $currentUser;
@@ -100,7 +95,6 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
     $this->wikiNodeChangesBuilder = $wikiNodeChangesBuilder;
     $this->wikiNodeChangesCache   = $wikiNodeChangesCache;
     $this->wikiNodeChangesInfo    = $wikiNodeChangesInfo;
-    $this->wikiNodeChangesUser    = $wikiNodeChangesUser;
 
   }
 
@@ -114,8 +108,7 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
       $container->get('omnipedia.timeline'),
       $container->get('omnipedia.wiki_node_changes_builder'),
       $container->get('omnipedia.wiki_node_changes_cache'),
-      $container->get('omnipedia.wiki_node_changes_info'),
-      $container->get('omnipedia.wiki_node_changes_user')
+      $container->get('omnipedia.wiki_node_changes_info')
     );
   }
 

@@ -11,8 +11,8 @@ use Drupal\Core\Utility\Error;
 use Drupal\node\NodeStorageInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
-use Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\omnipedia_user\Service\RepresentativeRenderUserInterface;
 use Drupal\user\RoleStorageInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -81,6 +81,13 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
   protected NodeStorageInterface $nodeStorage;
 
   /**
+   * The Omnipedia representative render user service.
+   *
+   * @var \Drupal\omnipedia_user\Service\RepresentativeRenderUserInterface
+   */
+  protected RepresentativeRenderUserInterface $representativeRenderUser;
+
+  /**
    * The Drupal user role entity storage.
    *
    * @var \Drupal\user\RoleStorageInterface
@@ -109,13 +116,6 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
   protected WikiNodeChangesInfoInterface $wikiNodeChangesInfo;
 
   /**
-   * The Omnipedia wiki node changes user service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface
-   */
-  protected WikiNodeChangesUserInterface $wikiNodeChangesUser;
-
-  /**
    * {@inheritdoc}
    */
   public static function create(
@@ -140,6 +140,10 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
       $container->get('entity_type.manager')->getStorage('node')
     );
 
+    $instance->setRepresentativeRenderUser(
+      $container->get('omnipedia_user.representative_render_user')
+    );
+
     $instance->setRoleStorage(
       $container->get('entity_type.manager')->getStorage('user_role')
     );
@@ -154,10 +158,6 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
 
     $instance->setWikiNodeChangesInfo(
       $container->get('omnipedia.wiki_node_changes_info')
-    );
-
-    $instance->setWikiNodeChangesUser(
-      $container->get('omnipedia.wiki_node_changes_user')
     );
 
     return $instance;
@@ -194,6 +194,18 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
    */
   public function setNodeStorage(NodeStorageInterface $nodeStorage): void {
     $this->nodeStorage = $nodeStorage;
+  }
+
+  /**
+   * Injects the Omnipedia representative render user service.
+   *
+   * @param \Drupal\omnipedia_user\Service\RepresentativeRenderUserInterface $representativeRenderUser
+   *   The Omnipedia representative render user service.
+   */
+  public function setRepresentativeRenderUser(
+    RepresentativeRenderUserInterface $representativeRenderUser
+  ): void {
+    $this->representativeRenderUser = $representativeRenderUser;
   }
 
   /**
@@ -241,18 +253,6 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
   }
 
   /**
-   * Injects the Omnipedia wiki node changes user service.
-   *
-   * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface $wikiNodeChangesUser
-   *   The Omnipedia wiki node changes user service.
-   */
-  public function setWikiNodeChangesUser(
-    WikiNodeChangesUserInterface $wikiNodeChangesUser
-  ): void {
-    $this->wikiNodeChangesUser = $wikiNodeChangesUser;
-  }
-
-  /**
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
@@ -291,7 +291,7 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
       }
 
       /** @var \Drupal\user\UserInterface|null */
-      $renderUser = $this->wikiNodeChangesUser->getUserToRenderAs(
+      $renderUser = $this->representativeRenderUser->getUserToRenderAs(
         \explode(',', $roles), $node, $previousNode
       );
 
