@@ -48,13 +48,6 @@ services:
       - '@entity_type.manager'
       - '@omnipedia_user.permission_hashes'
 
-  # The Omnipedia wiki node changes user service.
-  omnipedia.wiki_node_changes_user:
-    class: Drupal\omnipedia_changes\Service\WikiNodeChangesUser
-    arguments:
-      - '@entity_type.manager'
-      - '@omnipedia_user.permission_hashes'
-
   # Event subscriber to prepare wiki node changes diff content for alterations.
   omnipedia_changes.diff_prepare_event_subscriber:
     class: Drupal\omnipedia_changes\EventSubscriber\Omnipedia\Changes\DiffPrepareEventSubscriber
