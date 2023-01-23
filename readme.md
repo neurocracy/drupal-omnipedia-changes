@@ -123,7 +123,13 @@ Follow the Composer installation instructions for these dependencies first:
 
 * The [`ambientimpact_core` module](https://github.com/Ambient-Impact/drupal-modules).
 
-* The [`omnipedia_core`](https://github.com/neurocracy/drupal-omnipedia-core) and [`omnipedia_date`](https://github.com/neurocracy/drupal-omnipedia-date) modules.
+* The following Omnipedia modules:
+
+  * [`omnipedia_core`](https://github.com/neurocracy/drupal-omnipedia-core)
+
+  * [`omnipedia_date`](https://github.com/neurocracy/drupal-omnipedia-date)
+
+  * [`omnipedia_user`](https://github.com/neurocracy/drupal-omnipedia-user)
 
 ## Front-end dependencies
 
@@ -234,3 +240,5 @@ yarn workspace drupal-omnipedia-changes run build
 The following major version bumps indicate breaking changes:
 
 * 4.x - Front-end package manager is now [Yarn](https://yarnpkg.com/); front-end build process ported to [Webpack](https://webpack.js.org/).
+
+* 5.x - Moved and refactored the `omnipedia.wiki_node_changes_user` service to multiple services in the [`omnipedia_user` module](https://github.com/neurocracy/drupal-omnipedia-user).

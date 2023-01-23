@@ -11,5 +11,6 @@ dependencies:
   - diff:diff
   - omnipedia_core:omnipedia_core
   - omnipedia_date:omnipedia_date
+  - omnipedia_user:omnipedia_user
   - pcb:pcb
   - warmer:warmer

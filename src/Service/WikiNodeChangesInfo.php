@@ -9,9 +9,9 @@ use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\node\NodeStorageInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
-use Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface;
 use Drupal\omnipedia_core\Entity\Node;
 use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\omnipedia_user\Service\PermissionHashesInterface;
 use Drupal\user\RoleStorageInterface;
 use Drupal\user\UserStorageInterface;
 
@@ -35,6 +35,13 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
   protected NodeStorageInterface $nodeStorage;
 
   /**
+   * The Omnipedia permission hashes service.
+   *
+   * @var \Drupal\omnipedia_user\Service\PermissionHashesInterface
+   */
+  protected PermissionHashesInterface $permissionHashes;
+
+  /**
    * The Drupal user role entity storage.
    *
    * @var \Drupal\user\RoleStorageInterface
@@ -49,13 +56,6 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
   protected UserStorageInterface $userStorage;
 
   /**
-   * The Omnipedia wiki node changes user service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface
-   */
-  protected WikiNodeChangesUserInterface $wikiNodeChangesUser;
-
-  /**
    * Service constructor; saves dependencies.
    *
    * @param \Drupal\Core\Cache\Context\CacheContextsManager $cacheContextsManager
@@ -64,20 +64,20 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The Drupal entity type manager.
    *
-   * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface $wikiNodeChangesUser
-   *   The Omnipedia wiki node changes user service.
+   * @param \Drupal\omnipedia_user\Service\PermissionHashesInterface $permissionHashes
+   *   The Omnipedia permission hashes service.
    */
   public function __construct(
     CacheContextsManager          $cacheContextsManager,
     EntityTypeManagerInterface    $entityTypeManager,
-    WikiNodeChangesUserInterface  $wikiNodeChangesUser
+    PermissionHashesInterface     $permissionHashes
   ) {
 
     $this->cacheContextsManager = $cacheContextsManager;
     $this->nodeStorage          = $entityTypeManager->getStorage('node');
+    $this->permissionHashes     = $permissionHashes;
     $this->roleStorage          = $entityTypeManager->getStorage('user_role');
     $this->userStorage          = $entityTypeManager->getStorage('user');
-    $this->wikiNodeChangesUser  = $wikiNodeChangesUser;
 
   }
 
@@ -89,7 +89,7 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
   public function getCacheIds(string $nid): array {
 
     /** @var string[] */
-    $permissionHashes = $this->wikiNodeChangesUser->getPermissionHashes();
+    $permissionHashes = $this->permissionHashes->getPermissionHashes();
 
     // These are hard-coded for now. We only render on one theme, and currently
     // only have content in English.
@@ -169,7 +169,7 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
     return \implode(':', [
       'omnipedia_wiki_node_changes_placeholder',
       $nid,
-      $this->wikiNodeChangesUser->getPermissionHash(),
+      $this->permissionHashes->getPermissionHash(),
     ]);
 
   }

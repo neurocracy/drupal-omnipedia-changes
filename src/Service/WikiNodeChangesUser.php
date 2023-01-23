@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace Drupal\omnipedia_changes\Service;
 
 use Drupal\Core\Cache\Cache;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\Core\Session\AccountProxyInterface;
-use Drupal\Core\Session\PermissionsHashGeneratorInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesUserInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\omnipedia_user\Service\PermissionHashesInterface;
 use Drupal\user\RoleStorageInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -20,28 +18,6 @@ use Drupal\user\UserStorageInterface;
  * The Omnipedia wiki node changes user service.
  */
 class WikiNodeChangesUser implements WikiNodeChangesUserInterface {
-
-  /**
-   * The cache bin name where user permission hashes are stored.
-   *
-   * @var string
-   */
-  protected const USER_PERMISSION_HASHES_CACHE_BIN =
-    'omnipedia_changes_user_permission_hashes';
-
-  /**
-   * The default Drupal cache bin.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected CacheBackendInterface $defaultCache;
-
-  /**
-   * The current user proxy service.
-   *
-   * @var \Drupal\Core\Session\AccountProxyInterface
-   */
-  protected AccountProxyInterface $currentUser;
 
   /**
    * All user role entities, keyed by role ID (rid).
@@ -53,11 +29,11 @@ class WikiNodeChangesUser implements WikiNodeChangesUserInterface {
   protected array $allRoles;
 
   /**
-   * The Drupal user permissions hash generator.
+   * The Omnipedia permission hashes service.
    *
-   * @var \Drupal\Core\Session\PermissionsHashGeneratorInterface
+   * @var \Drupal\omnipedia_user\Service\PermissionHashesInterface
    */
-  protected PermissionsHashGeneratorInterface $permissionsHashGenerator;
+  protected PermissionHashesInterface $permissionHashes;
 
   /**
    * The Drupal user role entity storage.
@@ -76,92 +52,20 @@ class WikiNodeChangesUser implements WikiNodeChangesUserInterface {
   /**
    * Service constructor; saves dependencies.
    *
-   * @param \Drupal\Core\Cache\CacheBackendInterface $defaultCache
-   *   The default Drupal cache bin.
-   *
-   * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
-   *   The current user proxy service.
-   *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
    *   The Drupal entity type manager.
    *
-   * @param \Drupal\Core\Session\PermissionsHashGeneratorInterface $permissionsHashGenerator
-   *   The Drupal user permissions hash generator.
+   * @param \Drupal\omnipedia_user\Service\PermissionHashesInterface $permissionHashes
+   *   The Omnipedia permission hashes service.
    */
   public function __construct(
-    AccountProxyInterface             $currentUser,
-    CacheBackendInterface             $defaultCache,
-    EntityTypeManagerInterface        $entityTypeManager,
-    PermissionsHashGeneratorInterface $permissionsHashGenerator
+    EntityTypeManagerInterface  $entityTypeManager,
+    PermissionHashesInterface   $permissionHashes
   ) {
 
-    $this->currentUser              = $currentUser;
-    $this->defaultCache             = $defaultCache;
-    $this->permissionsHashGenerator = $permissionsHashGenerator;
+    $this->permissionHashes = $permissionHashes;
     $this->roleStorage = $entityTypeManager->getStorage('user_role');
     $this->userStorage = $entityTypeManager->getStorage('user');
-
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @see \Drupal\Core\Cache\Context\AccountPermissionsCacheContext::getContext()
-   *   We generate the permission hash in the exact same way as the
-   *   'user.permissions' cache context.
-   *
-   * @todo Determine how well this scales, and if starts to have a noticeable
-   *   performance impact, implement a system that only generates this when a
-   *   user is added/edited/deleted, one user at a time.
-   */
-  public function getPermissionHashes(): array {
-
-    /** @var object|null */
-    $cached = $this->defaultCache->get(self::USER_PERMISSION_HASHES_CACHE_BIN);
-
-    if (\is_object($cached)) {
-      return $cached->data;
-    }
-
-    /** @var \Drupal\user\UserInterface[] */
-    $allUsers = $this->userStorage->loadMultiple();
-
-    /** @var string[] */
-    $permissionHashes = [];
-
-    foreach ($allUsers as $user) {
-      $permissionHashes[\implode(',', $user->getRoles())] =
-        $this->permissionsHashGenerator->generate($user);
-    }
-
-    // Remove all duplicate hash values.
-    $permissionHashes = \array_unique($permissionHashes);
-
-    $this->defaultCache->set(
-      self::USER_PERMISSION_HASHES_CACHE_BIN, $permissionHashes,
-      Cache::PERMANENT,
-      Cache::mergeTags(
-        // Invalidated whenever any role is added/updated/deleted.
-        $this->roleStorage->getEntityType()->getListCacheTags(),
-        // Invalidated whenever any user is added/updated/deleted.
-        $this->userStorage->getEntityType()->getListCacheTags()
-      )
-    );
-
-    return $permissionHashes;
-
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getPermissionHash(?UserInterface $user = null): string {
-
-    if (!\is_object($user)) {
-      $user = $this->currentUser;
-    }
-
-    return $this->permissionsHashGenerator->generate($user);
 
   }
 
