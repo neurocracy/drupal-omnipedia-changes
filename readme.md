@@ -103,8 +103,6 @@ response to the browser:
 
 # Planned improvements
 
-* [Refactor changes rendering to generate temporary user accounts instead of using existing accounts](https://github.com/neurocracy/drupal-omnipedia-changes/issues/1)
-
 * [Refactor `OmnipediaWikiNodeChangesController` to no longer extend `ControllerBase`](https://github.com/neurocracy/drupal-omnipedia-changes/issues/2)
 
 ----
