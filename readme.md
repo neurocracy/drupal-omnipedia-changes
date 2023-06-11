@@ -183,7 +183,7 @@ Once those are defined, add the following to the `"dependencies"` section of
 your top-level `package.json`:
 
 ```json
-"drupal-omnipedia-changes": "workspace:^4"
+"drupal-omnipedia-changes": "workspace:^5"
 ```
 
 Then run `yarn install` and let Yarn do the rest.

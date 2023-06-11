@@ -1,6 +1,6 @@
 {
   "name": "drupal-omnipedia-changes",
-  "version": "4.0.0",
+  "version": "5.0.0",
   "license": "GPL-2.0",
   "repository": "github:neurocracy/drupal-omnipedia-changes",
   "scripts": {
