@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\omnipedia_changes\Event\Omnipedia\Changes;
 
 use Drupal\omnipedia_core\Entity\NodeInterface;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * Omnipedia changes abstract diff event.

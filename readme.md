@@ -109,7 +109,7 @@ response to the browser:
 
 # Requirements
 
-* [Drupal 9](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
+* [Drupal 9.5 or 10](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
 
 * PHP 8
 
@@ -159,7 +159,7 @@ section:
 ```
 
 Then, in your project's root, run `composer require
-"drupal/omnipedia_changes:4.x-dev@dev"` to have Composer install the module and
+"drupal/omnipedia_changes:6.x-dev@dev"` to have Composer install the module and
 its required dependencies for you.
 
 ## Front-end assets
@@ -183,7 +183,7 @@ Once those are defined, add the following to the `"dependencies"` section of
 your top-level `package.json`:
 
 ```json
-"drupal-omnipedia-changes": "workspace:^5"
+"drupal-omnipedia-changes": "workspace:^6"
 ```
 
 Then run `yarn install` and let Yarn do the rest.
@@ -240,3 +240,5 @@ The following major version bumps indicate breaking changes:
 * 4.x - Front-end package manager is now [Yarn](https://yarnpkg.com/); front-end build process ported to [Webpack](https://webpack.js.org/).
 
 * 5.x - Moved and refactored the `omnipedia.wiki_node_changes_user` service to multiple services in the [`omnipedia_user` module](https://github.com/neurocracy/drupal-omnipedia-user).
+
+* 6.x - Requires Drupal 9.5 or [Drupal 10](https://www.drupal.org/project/drupal/releases/10.0.0) with compatibility and deprecation fixes for the latter.
