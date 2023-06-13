@@ -14,6 +14,7 @@
     "php": "^8",
     "drupal/core": "^9.5 || ^10.0",
     "caxy/php-htmldiff": "^0.1.12",
+    "drupal/ambientimpact_core": "1.x-dev@dev",
     "drupal/diff": "^1.0",
     "drupal/pcb": "^3.0",
     "drupal/queue_ui": "^3.1",

@@ -1,7 +1,7 @@
 'use strict';
 
 const autoprefixer = require('autoprefixer');
-const componentPaths = require('ambientimpact-drupal-modules/componentPaths');
+const componentPaths = require('drupal-ambientimpact-core/componentPaths');
 const Encore = require('@symfony/webpack-encore');
 const glob = require('glob');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
