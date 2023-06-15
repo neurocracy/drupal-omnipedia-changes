@@ -109,7 +109,7 @@ response to the browser:
 
 # Requirements
 
-* [Drupal 9.5 or 10](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
+* [Drupal 9.5](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
 
 * PHP 8
 
@@ -247,4 +247,4 @@ The following major version bumps indicate breaking changes:
 
 * 5.x - Moved and refactored the `omnipedia.wiki_node_changes_user` service to multiple services in the [`omnipedia_user` module](https://github.com/neurocracy/drupal-omnipedia-user).
 
-* 6.x - Requires Drupal 9.5 or [Drupal 10](https://www.drupal.org/project/drupal/releases/10.0.0) with compatibility and deprecation fixes for the latter.
+* 6.x - Requires Drupal 9.5; includes backward compatible [Drupal 10](https://www.drupal.org/project/drupal/releases/10.0.0) deprecation fixes but is still not fully compatible.
