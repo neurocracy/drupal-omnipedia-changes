@@ -109,7 +109,7 @@ response to the browser:
 
 # Requirements
 
-* [Drupal 9.5](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
+* [Drupal 10](https://www.drupal.org/download) ([Drupal 8 is end-of-life](https://www.drupal.org/psa-2021-11-30))
 
 * PHP 8
 
@@ -165,7 +165,7 @@ In your root `composer.json`, add the following to the `"repositories"` section:
 ### Installing
 
 Once you've completed all of the above, run `composer require
-"drupal/omnipedia_changes:6.x-dev@dev"` in the root of your project to have
+"drupal/omnipedia_changes:7.x-dev@dev"` in the root of your project to have
 Composer install this and its required dependencies for you.
 
 ## Front-end assets
@@ -189,7 +189,7 @@ Once those are defined, add the following to the `"dependencies"` section of
 your top-level `package.json`:
 
 ```json
-"drupal-omnipedia-changes": "workspace:^6"
+"drupal-omnipedia-changes": "workspace:^7"
 ```
 
 Then run `yarn install` and let Yarn do the rest.
@@ -248,3 +248,9 @@ The following major version bumps indicate breaking changes:
 * 5.x - Moved and refactored the `omnipedia.wiki_node_changes_user` service to multiple services in the [`omnipedia_user` module](https://github.com/neurocracy/drupal-omnipedia-user).
 
 * 6.x - Requires Drupal 9.5; includes backward compatible [Drupal 10](https://www.drupal.org/project/drupal/releases/10.0.0) deprecation fixes but is still not fully compatible.
+
+* 7.x:
+
+  * Requires [Drupal 10](https://www.drupal.org/project/drupal/releases/10.0.0) due to non-backwards compatible change to [`\Drupal\Component\EventDispatcher\ContainerAwareEventDispatcher::dispatch()`](https://git.drupalcode.org/project/drupal/-/commit/7b324dd8f18919fc4d728bdb0afbcf27c8c02cb2#6e9d627c11801448b7a793c204471d8f951ae2fb).
+
+  * Requires [`ambientimpact_core`](https://github.com/Ambient-Impact/drupal-ambientimpact-core) 2.x due to the event dispatcher change.

@@ -227,8 +227,8 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
 
     // Dispatch the event with the event object.
     $this->eventDispatcher->dispatch(
-      OmnipediaContentChangesEventInterface::DIFF_POST_RENDER_PRE_BUILD,
-      $postRenderEvent
+      $postRenderEvent,
+      OmnipediaContentChangesEventInterface::DIFF_POST_RENDER_PRE_BUILD
     );
 
     $this->htmlDiff->setOldHtml($postRenderEvent->getPreviousRendered());
@@ -276,7 +276,7 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
 
     // Dispatch the event with the event object.
     $this->eventDispatcher->dispatch(
-      OmnipediaContentChangesEventInterface::DIFF_POST_BUILD, $postBuildEvent
+      $postBuildEvent, OmnipediaContentChangesEventInterface::DIFF_POST_BUILD
     );
 
     /** @var \Symfony\Component\DomCrawler\Crawler */

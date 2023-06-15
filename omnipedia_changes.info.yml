@@ -2,7 +2,7 @@ name: Omnipedia - Changes
 type: module
 description: Provides the wiki page changes functionality for Omnipedia.
 package: Omnipedia
-core_version_requirement: ^9.5
+core_version_requirement: ^10.0
 
 dependencies:
   - ambientimpact_core:ambientimpact_core
