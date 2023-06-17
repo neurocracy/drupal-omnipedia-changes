@@ -3,6 +3,10 @@
   "description": "Omnipedia - Changes",
   "type": "drupal-custom-module",
   "license": "GPL-2.0-or-later",
+  "support": {
+    "docs": "https://github.com/neurocracy/drupal-omnipedia-changes",
+    "source": "https://github.com/neurocracy/drupal-omnipedia-changes"
+  },
   "authors": [
     {
       "name": "Ambient.Impact",
