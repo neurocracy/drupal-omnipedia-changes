@@ -282,6 +282,11 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
       /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
       $node = $this->nodeStorage->load($nid);
 
+      // Skip if we couldn't load this node.
+      if (!\is_object($node)) {
+        continue;
+      }
+
       /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
       $previousNode = $node->getPreviousWikiNodeRevision();
 
