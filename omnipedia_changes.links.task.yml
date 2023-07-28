@@ -1,0 +1,5 @@
+entity.node.omnipedia_changes:
+  route_name: entity.node.omnipedia_changes
+  base_route: entity.node.canonical
+  title:      'Changes'
+  weight:     -1
