@@ -2,4 +2,4 @@ entity.node.omnipedia_changes:
   route_name: entity.node.omnipedia_changes
   base_route: entity.node.canonical
   title:      'History'
-  weight:     -1
+  weight:     -0.1
