@@ -1,7 +1,7 @@
 {
   "name": "drupal-omnipedia-changes",
   "version": "7.0.0",
-  "license": "GPL-2.0",
+  "license": "GPL-2.0-or-later",
   "repository": "github:neurocracy/drupal-omnipedia-changes",
   "scripts": {
     "build": "webpack --progress --config webpack.config.js"
