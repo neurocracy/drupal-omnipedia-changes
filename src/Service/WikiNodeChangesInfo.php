@@ -7,13 +7,10 @@ namespace Drupal\omnipedia_changes\Service;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\node\NodeStorageInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
 use Drupal\omnipedia_core\Entity\Node;
 use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_user\Service\PermissionHashesInterface;
-use Drupal\user\RoleStorageInterface;
-use Drupal\user\UserStorageInterface;
 
 /**
  * The Omnipedia wiki node changes info service.
@@ -28,11 +25,11 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
   protected CacheContextsManager $cacheContextsManager;
 
   /**
-   * The Drupal node entity storage.
+   * The Drupal entity type manager.
    *
-   * @var \Drupal\node\NodeStorageInterface
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
    */
-  protected NodeStorageInterface $nodeStorage;
+  protected EntityTypeManagerInterface $entityTypeManager;
 
   /**
    * The Omnipedia permission hashes service.
@@ -40,20 +37,6 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
    * @var \Drupal\omnipedia_user\Service\PermissionHashesInterface
    */
   protected PermissionHashesInterface $permissionHashes;
-
-  /**
-   * The Drupal user role entity storage.
-   *
-   * @var \Drupal\user\RoleStorageInterface
-   */
-  protected RoleStorageInterface $roleStorage;
-
-  /**
-   * The Drupal user entity storage.
-   *
-   * @var \Drupal\user\UserStorageInterface
-   */
-  protected UserStorageInterface $userStorage;
 
   /**
    * Service constructor; saves dependencies.
@@ -68,16 +51,14 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
    *   The Omnipedia permission hashes service.
    */
   public function __construct(
-    CacheContextsManager          $cacheContextsManager,
-    EntityTypeManagerInterface    $entityTypeManager,
-    PermissionHashesInterface     $permissionHashes
+    CacheContextsManager        $cacheContextsManager,
+    EntityTypeManagerInterface  $entityTypeManager,
+    PermissionHashesInterface   $permissionHashes
   ) {
 
     $this->cacheContextsManager = $cacheContextsManager;
-    $this->nodeStorage          = $entityTypeManager->getStorage('node');
+    $this->entityTypeManager    = $entityTypeManager;
     $this->permissionHashes     = $permissionHashes;
-    $this->roleStorage          = $entityTypeManager->getStorage('user_role');
-    $this->userStorage          = $entityTypeManager->getStorage('user');
 
   }
 
@@ -124,7 +105,7 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
     // This builds and executes a \Drupal\Core\Entity\Query\QueryInterface to
     // get all available wiki node IDs (nids).
     /** @var array */
-    $nids = ($this->nodeStorage->getQuery())
+    $nids = ($this->entityTypeManager->getStorage('node')->getQuery())
       ->condition('type', Node::getWikiNodeType())
       // Disable access checking so that this works as expected when invoked via
       // Drush at the commandline.
