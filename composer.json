@@ -15,7 +15,7 @@
     }
   ],
   "require": {
-    "php": "^8",
+    "php": "^8.1",
     "drupal/core": "^10.0",
     "caxy/php-htmldiff": "^0.1.12",
     "drupal/ambientimpact_core": "2.x-dev@dev",
