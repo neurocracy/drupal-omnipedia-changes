@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_changes\Plugin\warmer;
 
+use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\SubformStateInterface;
 use Drupal\Core\Session\AccountSwitcherInterface;
+use Drupal\Core\State\StateInterface;
 use Drupal\Core\Utility\Error;
 use Drupal\node\NodeStorageInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface;
@@ -53,67 +56,49 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
   protected array $cacheIds;
 
   /**
-   * All user role entities, keyed by role ID (rid).
+   * {@inheritdoc}
    *
-   * @var \Drupal\user\RoleInterface[]
+   * @param \Drupal\Core\Session\AccountSwitcherInterface $accountSwitcher
+   *   The Drupal account switcher service.
+   *
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
+   *   The Drupal entity type manager.
+   *
+   * @param \Psr\Log\LoggerInterface $loggerChannel
+   *   Our logger channel.
+   *
+   * @param \Drupal\omnipedia_user\Service\RepresentativeRenderUserInterface $representativeRenderUser
+   *   The Omnipedia representative render user service.
+   *
+   * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder
+   *   The Omnipedia wiki node changes builder service.
+   *
+   * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface $wikiNodeChangesInfo
+   *   The Omnipedia wiki node changes info service.
+   *
+   * @param \Drupal\Core\State\StateInterface
+   *   The Drupal state service.
+   *
+   * @param \Drupal\Component\Datetime\TimeInterface
+   *   The Drupal time service.
    */
-  protected array $allRoles;
+  public function __construct(
+    array $configuration, string $pluginId, array $pluginDefinition,
+    protected readonly AccountSwitcherInterface           $accountSwitcher,
+    protected readonly EntityTypeManagerInterface         $entityTypeManager,
+    protected readonly LoggerInterface                    $loggerChannel,
+    protected readonly RepresentativeRenderUserInterface  $representativeRenderUser,
+    protected readonly WikiNodeChangesBuilderInterface    $wikiNodeChangesBuilder,
+    protected readonly WikiNodeChangesInfoInterface       $wikiNodeChangesInfo,
+    StateInterface  $state,
+    TimeInterface   $time,
+  ) {
 
-  /**
-   * The Drupal account switcher service.
-   *
-   * @var \Drupal\Core\Session\AccountSwitcherInterface
-   */
-  protected AccountSwitcherInterface $accountSwitcher;
+    parent::__construct(
+      $configuration, $pluginId, $pluginDefinition, $state, $time,
+    );
 
-  /**
-   * Our logger channel.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected LoggerInterface $loggerChannel;
-
-  /**
-   * The Drupal node entity storage.
-   *
-   * @var \Drupal\node\NodeStorageInterface
-   */
-  protected NodeStorageInterface $nodeStorage;
-
-  /**
-   * The Omnipedia representative render user service.
-   *
-   * @var \Drupal\omnipedia_user\Service\RepresentativeRenderUserInterface
-   */
-  protected RepresentativeRenderUserInterface $representativeRenderUser;
-
-  /**
-   * The Drupal user role entity storage.
-   *
-   * @var \Drupal\user\RoleStorageInterface
-   */
-  protected RoleStorageInterface $roleStorage;
-
-  /**
-   * The Drupal user entity storage.
-   *
-   * @var \Drupal\user\UserStorageInterface
-   */
-  protected UserStorageInterface $userStorage;
-
-  /**
-   * The Omnipedia wiki node changes builder service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface
-   */
-  protected WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder;
-
-  /**
-   * The Omnipedia wiki node changes info service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface
-   */
-  protected WikiNodeChangesInfoInterface $wikiNodeChangesInfo;
+  }
 
   /**
    * {@inheritdoc}
@@ -123,133 +108,31 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
     array $configuration, $pluginId, $pluginDefinition
   ) {
 
-    /** @var \Drupal\warmer\Plugin\WarmerInterface */
-    $instance = parent::create(
-      $container, $configuration, $pluginId, $pluginDefinition
+    // This replicates what WarmerPluginBase::create() does so that we don't
+    // need to call parent::create() in order to use PHP 8 constructor property
+    // promotion for all our dependencies.
+    $warmersConfig = $container->get('config.factory')
+      ->get('warmer.settings')
+      ->get('warmers');
+
+    $pluginSettings = empty(
+      $warmersConfig[$pluginId]
+    ) ? [] : $warmersConfig[$pluginId];
+
+    $configuration = \array_merge($pluginSettings, $configuration);
+
+    return new static(
+      $configuration, $pluginId, $pluginDefinition,
+      $container->get('account_switcher'),
+      $container->get('entity_type.manager'),
+      $container->get('logger.channel.omnipedia_changes'),
+      $container->get('omnipedia_user.representative_render_user'),
+      $container->get('omnipedia.wiki_node_changes_builder'),
+      $container->get('omnipedia.wiki_node_changes_info'),
+      $container->get('state'),
+      $container->get('datetime.time'),
     );
 
-    $instance->setAccountSwitcher(
-      $container->get('account_switcher')
-    );
-
-    $instance->setLoggerChannel(
-      $container->get('logger.channel.omnipedia_changes')
-    );
-
-    $instance->setNodeStorage(
-      $container->get('entity_type.manager')->getStorage('node')
-    );
-
-    $instance->setRepresentativeRenderUser(
-      $container->get('omnipedia_user.representative_render_user')
-    );
-
-    $instance->setRoleStorage(
-      $container->get('entity_type.manager')->getStorage('user_role')
-    );
-
-    $instance->setUserStorage(
-      $container->get('entity_type.manager')->getStorage('user')
-    );
-
-    $instance->setWikiNodeChangesBuilder(
-      $container->get('omnipedia.wiki_node_changes_builder')
-    );
-
-    $instance->setWikiNodeChangesInfo(
-      $container->get('omnipedia.wiki_node_changes_info')
-    );
-
-    return $instance;
-
-  }
-
-  /**
-   * Injects the Drupal account switcher service.
-   *
-   * @param \Drupal\Core\Session\AccountSwitcherInterface $accountSwitcher
-   *   The Drupal account switcher service.
-   */
-  public function setAccountSwitcher(
-    AccountSwitcherInterface $accountSwitcher
-  ): void {
-    $this->accountSwitcher = $accountSwitcher;
-  }
-
-  /**
-   * Injects the logger channel.
-   *
-   * @param \Psr\Log\LoggerInterface $loggerChannel
-   *   Our logger channel.
-   */
-  public function setLoggerChannel(LoggerInterface $loggerChannel): void {
-    $this->loggerChannel = $loggerChannel;
-  }
-
-  /**
-   * Injects the Drupal node entity storage.
-   *
-   * @param \Drupal\node\NodeStorageInterface $nodeStorage
-   *   The Drupal node entity storage.
-   */
-  public function setNodeStorage(NodeStorageInterface $nodeStorage): void {
-    $this->nodeStorage = $nodeStorage;
-  }
-
-  /**
-   * Injects the Omnipedia representative render user service.
-   *
-   * @param \Drupal\omnipedia_user\Service\RepresentativeRenderUserInterface $representativeRenderUser
-   *   The Omnipedia representative render user service.
-   */
-  public function setRepresentativeRenderUser(
-    RepresentativeRenderUserInterface $representativeRenderUser
-  ): void {
-    $this->representativeRenderUser = $representativeRenderUser;
-  }
-
-  /**
-   * Injects the Drupal user role entity storage.
-   *
-   * @param \Drupal\user\RoleStorageInterface $roleStorage
-   *   The Drupal user role entity storage.
-   */
-  public function setRoleStorage(RoleStorageInterface $roleStorage): void {
-    $this->roleStorage = $roleStorage;
-  }
-
-  /**
-   * Injects the Drupal user entity storage.
-   *
-   * @param \Drupal\user\UserStorageInterface $userStorage
-   *   The Drupal user entity storage.
-   */
-  public function setUserStorage(UserStorageInterface $userStorage): void {
-    $this->userStorage = $userStorage;
-  }
-
-  /**
-   * Injects the Omnipedia wiki node changes builder service.
-   *
-   * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder
-   *   The Omnipedia wiki node changes builder service.
-   */
-  public function setWikiNodeChangesBuilder(
-    WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder
-  ): void {
-    $this->wikiNodeChangesBuilder = $wikiNodeChangesBuilder;
-  }
-
-  /**
-   * Injects the Omnipedia wiki node changes info service.
-   *
-   * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface $wikiNodeChangesInfo
-   *   The Omnipedia wiki node changes info service.
-   */
-  public function setWikiNodeChangesInfo(
-    WikiNodeChangesInfoInterface $wikiNodeChangesInfo
-  ): void {
-    $this->wikiNodeChangesInfo = $wikiNodeChangesInfo;
   }
 
   /**
@@ -280,7 +163,7 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
       list($nid, $roles) = \explode(':', $id);
 
       /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
-      $node = $this->nodeStorage->load($nid);
+      $node = $this->entityTypeManager->getStorage('node')->load($nid);
 
       // Skip if we couldn't load this node.
       if (!\is_object($node)) {
