@@ -8,7 +8,6 @@ use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
-use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
@@ -20,6 +19,7 @@ use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_date\Service\TimelineInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Returns responses for the Omnipedia wiki node changes route.
@@ -215,10 +215,10 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
    *   A node object.
    *
-   * @return \Drupal\Core\Routing\TrustedRedirectResponse
-   *   A trusted redirect response object.
+   * @return \Symfony\Component\HttpFoundation\RedirectResponse
+   *   A redirect response object.
    */
-  public function viewBuild(NodeInterface $node): TrustedRedirectResponse {
+  public function viewBuild(NodeInterface $node): RedirectResponse {
 
     $this->wikiNodeChangesCache->invalidate($node);
 
@@ -229,9 +229,9 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
       'node' => $node->nid->getString(),
     ])->toString(true);
 
-    return (new TrustedRedirectResponse(
+    return (new RedirectResponse(
       $generatedUrl->getGeneratedUrl(), 302,
-    ))->addCacheableDependency($node)->addCacheableDependency($generatedUrl);
+    ));
 
   }
 
