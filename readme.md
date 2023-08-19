@@ -101,12 +101,6 @@ response to the browser:
 
 ----
 
-# Planned improvements
-
-* [Refactor `OmnipediaWikiNodeChangesController` to no longer extend `ControllerBase`](https://github.com/neurocracy/drupal-omnipedia-changes/issues/2)
-
-----
-
 # Requirements
 
 * [Drupal 10](https://www.drupal.org/download)

@@ -7,9 +7,12 @@ namespace Drupal\omnipedia_changes\Controller;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Access\AccessResult;
 use Drupal\Core\Access\AccessResultInterface;
-use Drupal\Core\Controller\ControllerBase;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Routing\TrustedRedirectResponse;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\Core\Url;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
@@ -17,12 +20,13 @@ use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_date\Service\TimelineInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Returns responses for the Omnipedia wiki node changes route.
  */
-class OmnipediaWikiNodeChangesController extends ControllerBase {
+class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface {
+
+  use StringTranslationTrait;
 
   /**
    * Our logger channel.
@@ -79,6 +83,9 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
    *
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface $wikiNodeChangesInfo
    *   The Omnipedia wiki node changes info service.
+   *
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $stringTranslation
+   *   The Drupal string translation service.
    */
   public function __construct(
     AccountProxyInterface           $currentUser,
@@ -86,7 +93,8 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
     TimelineInterface               $timeline,
     WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder,
     WikiNodeChangesCacheInterface   $wikiNodeChangesCache,
-    WikiNodeChangesInfoInterface    $wikiNodeChangesInfo
+    WikiNodeChangesInfoInterface    $wikiNodeChangesInfo,
+    protected $stringTranslation,
   ) {
 
     $this->currentUser            = $currentUser;
@@ -108,7 +116,8 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
       $container->get('omnipedia.timeline'),
       $container->get('omnipedia.wiki_node_changes_builder'),
       $container->get('omnipedia.wiki_node_changes_cache'),
-      $container->get('omnipedia.wiki_node_changes_info')
+      $container->get('omnipedia.wiki_node_changes_info'),
+      $container->get('string_translation'),
     );
   }
 
@@ -244,18 +253,23 @@ class OmnipediaWikiNodeChangesController extends ControllerBase {
    * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
    *   A node object.
    *
-   * @return \Symfony\Component\HttpFoundation\RedirectResponse
-   *   A redirect response object.
+   * @return \Drupal\Core\Routing\TrustedRedirectResponse
+   *   A trusted redirect response object.
    */
-  public function viewBuild(NodeInterface $node): RedirectResponse {
+  public function viewBuild(NodeInterface $node): TrustedRedirectResponse {
 
     $this->wikiNodeChangesCache->invalidate($node);
 
     $this->wikiNodeChangesBuilder->build($node);
 
-    return $this->redirect('entity.node.omnipedia_changes', [
+    /** @var \Drupal\Core\GeneratedUrl */
+    $generatedUrl = Url::fromRoute('entity.node.omnipedia_changes', [
       'node' => $node->nid->getString(),
-    ]);
+    ])->toString(true);
+
+    return (new TrustedRedirectResponse(
+      $generatedUrl->getGeneratedUrl(), 302,
+    ))->addCacheableDependency($node)->addCacheableDependency($generatedUrl);
 
   }
 
