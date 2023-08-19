@@ -29,41 +29,6 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
   use StringTranslationTrait;
 
   /**
-   * Our logger channel.
-   *
-   * @var \Psr\Log\LoggerInterface
-   */
-  protected LoggerInterface $loggerChannel;
-
-  /**
-   * The Omnipedia timeline service.
-   *
-   * @var \Drupal\omnipedia_date\Service\TimelineInterface
-   */
-  protected TimelineInterface $timeline;
-
-  /**
-   * The Omnipedia wiki node changes builder service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface
-   */
-  protected WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder;
-
-  /**
-   * The Omnipedia wiki node changes cache service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface
-   */
-  protected WikiNodeChangesCacheInterface $wikiNodeChangesCache;
-
-  /**
-   * The Omnipedia wiki node changes info service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface
-   */
-  protected WikiNodeChangesInfoInterface $wikiNodeChangesInfo;
-
-  /**
    * Constructs this controller; saves dependencies.
    *
    * @param \Drupal\Core\Session\AccountProxyInterface $currentUser
@@ -88,23 +53,14 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    *   The Drupal string translation service.
    */
   public function __construct(
-    AccountProxyInterface           $currentUser,
-    LoggerInterface                 $loggerChannel,
-    TimelineInterface               $timeline,
-    WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder,
-    WikiNodeChangesCacheInterface   $wikiNodeChangesCache,
-    WikiNodeChangesInfoInterface    $wikiNodeChangesInfo,
+    protected readonly AccountProxyInterface            $currentUser,
+    protected readonly LoggerInterface                  $loggerChannel,
+    protected readonly TimelineInterface                $timeline,
+    protected readonly WikiNodeChangesBuilderInterface  $wikiNodeChangesBuilder,
+    protected readonly WikiNodeChangesCacheInterface    $wikiNodeChangesCache,
+    protected readonly WikiNodeChangesInfoInterface     $wikiNodeChangesInfo,
     protected $stringTranslation,
-  ) {
-
-    $this->currentUser            = $currentUser;
-    $this->loggerChannel          = $loggerChannel;
-    $this->timeline               = $timeline;
-    $this->wikiNodeChangesBuilder = $wikiNodeChangesBuilder;
-    $this->wikiNodeChangesCache   = $wikiNodeChangesCache;
-    $this->wikiNodeChangesInfo    = $wikiNodeChangesInfo;
-
-  }
+  ) {}
 
   /**
    * {@inheritdoc}
@@ -127,6 +83,9 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * @param \Drupal\Core\Session\AccountInterface $account
    *   Run access checks for this account.
    *
+   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   *   A node object to check access for.
+   *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result. Access is granted if the provided node is a wiki node,
    *   the wiki node is not a main page, the wiki node has a previous revision,
@@ -134,7 +93,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    *   revision.
    */
   public function access(
-    AccountInterface $account, NodeInterface $node
+    AccountInterface $account, NodeInterface $node,
   ): AccessResultInterface {
 
     /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
@@ -144,7 +103,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
       !$node->isMainPage() &&
       $node->access('view', $account) &&
       \is_object($previousNode) &&
-      $previousNode->access('view', $account)
+      $previousNode->access('view', $account),
     )
     ->addCacheableDependency($node);
 
@@ -156,17 +115,20 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * @param \Drupal\Core\Session\AccountInterface $account
    *   Run access checks for this account.
    *
+   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   *   A node object to check access for.
+   *
    * @return \Drupal\Core\Access\AccessResultInterface
    *   The access result.
    */
   public function accessBuild(
-    AccountInterface $account, NodeInterface $node
+    AccountInterface $account, NodeInterface $node,
   ): AccessResultInterface {
 
     return $this->access($account, $node)->andIf(
       AccessResult::allowedIfHasPermission(
-        $account, 'build omnipedia_changes'
-      )
+        $account, 'build omnipedia_changes',
+      ),
     );
 
   }

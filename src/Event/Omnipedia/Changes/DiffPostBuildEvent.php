@@ -14,33 +14,18 @@ use Symfony\Component\DomCrawler\Crawler;
 class DiffPostBuildEvent extends AbstractDiffEvent {
 
   /**
-   * A Symfony DomCrawler instance containing the diff DOM.
-   *
-   * @var \Symfony\Component\DomCrawler\Crawler
-   */
-  protected Crawler $crawler;
-
-  /**
    * {@inheritdoc}
    *
    * @param \Symfony\Component\DomCrawler\Crawler $crawler
    *   A Symfony DomCrawler instance containing the diff DOM.
    */
   public function __construct(
-    NodeInterface $currentNode,
-    NodeInterface $previousNode,
-    string        $currentRendered,
-    string        $previousRendered,
-    Crawler       $crawler
-  ) {
-
-    parent::__construct(
-      $currentNode, $previousNode, $currentRendered, $previousRendered
-    );
-
-    $this->setCrawler($crawler);
-
-  }
+    protected NodeInterface $currentNode,
+    protected NodeInterface $previousNode,
+    protected string        $currentRendered,
+    protected string        $previousRendered,
+    protected Crawler       $crawler,
+  ) {}
 
   /**
    * Get the Symfony DomCrawler instance.

@@ -13,34 +13,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 abstract class AbstractDiffEvent extends Event {
 
   /**
-   * The current wiki node object.
-   *
-   * @var \Drupal\omnipedia_core\Entity\NodeInterface
-   */
-  protected NodeInterface $currentNode;
-
-  /**
-   * The previous wiki node object.
-   *
-   * @var \Drupal\omnipedia_core\Entity\NodeInterface
-   */
-  protected NodeInterface $previousNode;
-
-  /**
-   * The current wiki node revision rendered as HTML.
-   *
-   * @var string
-   */
-  protected string $currentRendered;
-
-  /**
-   * The previous wiki node revision rendered as HTML.
-   *
-   * @var string
-   */
-  protected string $previousRendered;
-
-  /**
    * Constructs this event object.
    *
    * @param \Drupal\omnipedia_core\Entity\NodeInterface $currentNode
@@ -56,19 +28,11 @@ abstract class AbstractDiffEvent extends Event {
    *   The previous wiki node revision rendered as HTML.
    */
   public function __construct(
-    NodeInterface $currentNode,
-    NodeInterface $previousNode,
-    string        $currentRendered,
-    string        $previousRendered
-  ) {
-
-    $this->currentNode  = $currentNode;
-    $this->previousNode = $previousNode;
-
-    $this->setCurrentRendered($currentRendered);
-    $this->setPreviousRendered($previousRendered);
-
-  }
+    protected NodeInterface $currentNode,
+    protected NodeInterface $previousNode,
+    protected string        $currentRendered,
+    protected string        $previousRendered,
+  ) {}
 
   /**
    * Get the current wiki node revision's rendered HTML.

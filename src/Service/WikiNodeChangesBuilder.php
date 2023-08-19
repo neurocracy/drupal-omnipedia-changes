@@ -9,7 +9,6 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\Core\StringTranslation\TranslationInterface;
 use Drupal\omnipedia_changes\Event\OmnipediaContentChangesEventInterface;
 use Drupal\omnipedia_changes\Event\Omnipedia\Changes\DiffPostBuildEvent;
 use Drupal\omnipedia_changes\Event\Omnipedia\Changes\DiffPostRenderPreBuildEvent;
@@ -31,49 +30,7 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
   use StringTranslationTrait;
   use WikiNodeChangesCssClassesTrait;
 
-  /**
-   * The Drupal entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
-   * The Symfony event dispatcher service.
-   *
-   * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
-   */
-  protected EventDispatcherInterface $eventDispatcher;
-
-  /**
-   * The HTML diff service provided by the Diff module.
-   *
-   * @var \HtmlDiffAdvancedInterface
-   */
-  protected HtmlDiffAdvancedInterface $htmlDiff;
-
-  /**
-   * The Drupal renderer service.
-   *
-   * @var \Drupal\Core\Render\RendererInterface
-   */
-  protected RendererInterface $renderer;
-
-  /**
-   * The Omnipedia wiki node changes cache service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface
-   */
-  protected WikiNodeChangesCacheInterface $wikiNodeChangesCache;
-
-  /**
-   * The Omnipedia wiki node changes info service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface
-   */
-  protected WikiNodeChangesInfoInterface $wikiNodeChangesInfo;
-
-  /**
+   /**
    * Service constructor; saves dependencies.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entityTypeManager
@@ -100,22 +57,14 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
    * @see $this->alterHtmlDiffConfig()
    */
   public function __construct(
-    EntityTypeManagerInterface    $entityTypeManager,
-    EventDispatcherInterface      $eventDispatcher,
-    HtmlDiffAdvancedInterface     $htmlDiff,
-    RendererInterface             $renderer,
-    TranslationInterface          $stringTranslation,
-    WikiNodeChangesCacheInterface $wikiNodeChangesCache,
-    WikiNodeChangesInfoInterface  $wikiNodeChangesInfo
+    protected readonly EntityTypeManagerInterface     $entityTypeManager,
+    protected readonly EventDispatcherInterface       $eventDispatcher,
+    protected readonly HtmlDiffAdvancedInterface      $htmlDiff,
+    protected readonly RendererInterface              $renderer,
+    protected $stringTranslation,
+    protected readonly WikiNodeChangesCacheInterface  $wikiNodeChangesCache,
+    protected readonly WikiNodeChangesInfoInterface   $wikiNodeChangesInfo,
   ) {
-
-    $this->entityTypeManager    = $entityTypeManager;
-    $this->eventDispatcher      = $eventDispatcher;
-    $this->htmlDiff             = $htmlDiff;
-    $this->renderer             = $renderer;
-    $this->stringTranslation    = $stringTranslation;
-    $this->wikiNodeChangesCache = $wikiNodeChangesCache;
-    $this->wikiNodeChangesInfo  = $wikiNodeChangesInfo;
 
     $this->alterHtmlDiffConfig();
 

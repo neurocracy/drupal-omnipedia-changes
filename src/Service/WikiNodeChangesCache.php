@@ -21,27 +21,6 @@ use Drupal\omnipedia_core\Entity\NodeInterface;
 class WikiNodeChangesCache implements WikiNodeChangesCacheInterface {
 
   /**
-   * The Drupal cache tags invalidator service.
-   *
-   * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
-   */
-  protected CacheTagsInvalidatorInterface $cacheTagsInvalidator;
-
-  /**
-   * The Omnipedia wiki node changes cache bin.
-   *
-   * @var \Drupal\Core\Cache\CacheBackendInterface
-   */
-  protected CacheBackendInterface $changesCache;
-
-  /**
-   * The Omnipedia wiki node changes info service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface
-   */
-  protected WikiNodeChangesInfoInterface $wikiNodeChangesInfo;
-
-  /**
    * Service constructor; saves dependencies.
    *
    * @param \Drupal\Core\Cache\CacheBackendInterface $changesCache
@@ -54,16 +33,10 @@ class WikiNodeChangesCache implements WikiNodeChangesCacheInterface {
    *   The Omnipedia wiki node changes info service.
    */
   public function __construct(
-    CacheBackendInterface         $changesCache,
-    CacheTagsInvalidatorInterface $cacheTagsInvalidator,
-    WikiNodeChangesInfoInterface  $wikiNodeChangesInfo
-  ) {
-
-    $this->changesCache         = $changesCache;
-    $this->cacheTagsInvalidator = $cacheTagsInvalidator;
-    $this->wikiNodeChangesInfo  = $wikiNodeChangesInfo;
-
-  }
+    protected readonly CacheBackendInterface          $changesCache,
+    protected readonly CacheTagsInvalidatorInterface  $cacheTagsInvalidator,
+    protected readonly WikiNodeChangesInfoInterface   $wikiNodeChangesInfo,
+  ) {}
 
   /**
    * {@inheritdoc}

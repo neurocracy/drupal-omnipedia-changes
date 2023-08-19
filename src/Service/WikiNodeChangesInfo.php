@@ -18,27 +18,6 @@ use Drupal\omnipedia_user\Service\PermissionHashesInterface;
 class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
 
   /**
-   * The Drupal cache contexts manager.
-   *
-   * @var \Drupal\Core\Cache\Context\CacheContextsManager
-   */
-  protected CacheContextsManager $cacheContextsManager;
-
-  /**
-   * The Drupal entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected EntityTypeManagerInterface $entityTypeManager;
-
-  /**
-   * The Omnipedia permission hashes service.
-   *
-   * @var \Drupal\omnipedia_user\Service\PermissionHashesInterface
-   */
-  protected PermissionHashesInterface $permissionHashes;
-
-  /**
    * Service constructor; saves dependencies.
    *
    * @param \Drupal\Core\Cache\Context\CacheContextsManager $cacheContextsManager
@@ -51,16 +30,10 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
    *   The Omnipedia permission hashes service.
    */
   public function __construct(
-    CacheContextsManager        $cacheContextsManager,
-    EntityTypeManagerInterface  $entityTypeManager,
-    PermissionHashesInterface   $permissionHashes
-  ) {
-
-    $this->cacheContextsManager = $cacheContextsManager;
-    $this->entityTypeManager    = $entityTypeManager;
-    $this->permissionHashes     = $permissionHashes;
-
-  }
+    protected readonly CacheContextsManager       $cacheContextsManager,
+    protected readonly EntityTypeManagerInterface $entityTypeManager,
+    protected readonly PermissionHashesInterface  $permissionHashes,
+  ) {}
 
   /**
    * {@inheritdoc}

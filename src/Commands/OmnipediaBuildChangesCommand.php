@@ -22,25 +22,14 @@ class OmnipediaBuildChangesCommand extends DrushCommands implements SiteAliasMan
   protected const WARMER_ID = 'omnipedia_wiki_node_changes';
 
   /**
-   * The Omnipedia wiki node changes cache service.
-   *
-   * @var \Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface
-   */
-  protected WikiNodeChangesCacheInterface $wikiNodeChangesCache;
-
-  /**
    * Constructs this command; saves dependencies.
    *
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface $wikiNodeChangesCache
    *   The Omnipedia wiki node changes cache service.
    */
   public function __construct(
-    WikiNodeChangesCacheInterface $wikiNodeChangesCache
-  ) {
-
-    $this->wikiNodeChangesCache = $wikiNodeChangesCache;
-
-  }
+    protected readonly WikiNodeChangesCacheInterface $wikiNodeChangesCache,
+  ) {}
 
   /**
    * Build Omnipedia wiki node changes.
