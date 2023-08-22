@@ -14,12 +14,6 @@ services:
     factory: logger.factory:get
     arguments: ['omnipedia_changes']
 
-  # The Omnipedia changes help service.
-  omnipedia_changes.help:
-    class: Drupal\omnipedia_changes\Service\Help
-    arguments:
-      - '@string_translation'
-
   # The Omnipedia wiki node changes builder service.
   omnipedia.wiki_node_changes_builder:
     class: Drupal\omnipedia_changes\Service\WikiNodeChangesBuilder

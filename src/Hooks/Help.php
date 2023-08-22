@@ -2,17 +2,19 @@
 
 declare(strict_types=1);
 
-namespace Drupal\omnipedia_changes\Service;
+namespace Drupal\omnipedia_changes\Hooks;
 
 use Drupal\Component\Render\MarkupInterface;
+use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\omnipedia_core\Service\HelpInterface;
+use Drupal\hux\Attribute\Hook;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * The Omnipedia changes help service.
+ * Help hook implementations.
  */
-class Help implements HelpInterface {
+class Help implements ContainerInjectionInterface {
 
   use StringTranslationTrait;
 
@@ -30,7 +32,7 @@ class Help implements HelpInterface {
   protected const LIBRARY = 'omnipedia_changes/component.changes';
 
   /**
-   * Service constructor; saves dependencies.
+   * Hook constructor; saves dependencies.
    *
    * @param \Drupal\Core\StringTranslation\TranslationInterface $stringTranslation
    *   The Drupal string translation service.
@@ -40,8 +42,26 @@ class Help implements HelpInterface {
   /**
    * {@inheritdoc}
    */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('string_translation'),
+    );
+  }
+
+  #[Hook('help')]
+  /**
+   * Implements \hook_help().
+   *
+   * @param string $routeName
+   *   The current route name.
+   *
+   * @param \Drupal\Core\Routing\RouteMatchInterface $routeMatch
+   *   The current route match.
+   *
+   * @return \Drupal\Component\Render\MarkupInterface|array|string
+   */
   public function help(
-    string $routeName, RouteMatchInterface $routeMatch
+    string $routeName, RouteMatchInterface $routeMatch,
   ): MarkupInterface|array|string {
 
     if ($routeName === 'entity.node.omnipedia_changes') {
