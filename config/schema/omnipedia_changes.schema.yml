@@ -1,0 +1,11 @@
+warmer.settings.warmer_plugin.omnipedia_wiki_node_changes:
+  type: mapping
+  mapping:
+    id:
+      type: string
+    frequency:
+      label: 'Frequency'
+      type: integer
+    batchSize:
+      label: 'Batch size'
+      type: integer
