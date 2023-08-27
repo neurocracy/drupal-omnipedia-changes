@@ -8,8 +8,8 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
-use Drupal\omnipedia_core\Entity\Node;
 use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_user\Service\PermissionHashesInterface;
 
 /**
@@ -79,7 +79,7 @@ class WikiNodeChangesInfo implements WikiNodeChangesInfoInterface {
     // get all available wiki node IDs (nids).
     /** @var array */
     $nids = ($this->entityTypeManager->getStorage('node')->getQuery())
-      ->condition('type', Node::getWikiNodeType())
+      ->condition('type', WikiNodeInfo::TYPE)
       // Disable access checking so that this works as expected when invoked via
       // Drush at the commandline.
       ->accessCheck(false)
