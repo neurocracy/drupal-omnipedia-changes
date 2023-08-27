@@ -18,6 +18,7 @@ use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
 use Drupal\omnipedia_changes\WikiNodeChangesCssClassesInterface;
 use Drupal\omnipedia_changes\WikiNodeChangesCssClassesTrait;
 use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use HtmlDiffAdvancedInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -54,6 +55,9 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface $wikiNodeChangesInfo
    *   The Omnipedia wiki node changes info service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
+   *   The Omnipedia wiki node revision service.
+   *
    * @see $this->alterHtmlDiffConfig()
    */
   public function __construct(
@@ -64,6 +68,7 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
     protected $stringTranslation,
     protected readonly WikiNodeChangesCacheInterface  $wikiNodeChangesCache,
     protected readonly WikiNodeChangesInfoInterface   $wikiNodeChangesInfo,
+    protected readonly WikiNodeRevisionInterface      $wikiNodeRevision,
   ) {
 
     $this->alterHtmlDiffConfig();
@@ -134,7 +139,7 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
     }
 
     /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $previousNode = $node->getPreviousWikiNodeRevision();
+    $previousNode = $this->wikiNodeRevision->getPreviousRevision($node);
 
     /** @var \Drupal\Core\Entity\EntityViewBuilderInterface */
     $viewBuilder = $this->entityTypeManager->getViewBuilder(
@@ -263,7 +268,7 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
   ): array {
 
     /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $previousNode = $node->getPreviousWikiNodeRevision();
+    $previousNode = $this->wikiNodeRevision->getPreviousRevision($node);
 
     // Bail if not a wiki node or the wiki node does not have a previous
     // revision.

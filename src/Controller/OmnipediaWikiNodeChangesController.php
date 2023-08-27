@@ -16,6 +16,8 @@ use Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
+use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_date\Service\TimelineInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -49,6 +51,12 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface $wikiNodeChangesInfo
    *   The Omnipedia wiki node changes info service.
    *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
+   *   The Omnipedia wiki node main page service.
+   *
+   * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
+   *   The Omnipedia wiki node revision service.
+   *
    * @param \Drupal\Core\StringTranslation\TranslationInterface $stringTranslation
    *   The Drupal string translation service.
    */
@@ -59,6 +67,8 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
     protected readonly WikiNodeChangesBuilderInterface  $wikiNodeChangesBuilder,
     protected readonly WikiNodeChangesCacheInterface    $wikiNodeChangesCache,
     protected readonly WikiNodeChangesInfoInterface     $wikiNodeChangesInfo,
+    protected readonly WikiNodeMainPageInterface        $wikiNodeMainPage,
+    protected readonly WikiNodeRevisionInterface        $wikiNodeRevision,
     protected $stringTranslation,
   ) {}
 
@@ -73,6 +83,8 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
       $container->get('omnipedia.wiki_node_changes_builder'),
       $container->get('omnipedia.wiki_node_changes_cache'),
       $container->get('omnipedia.wiki_node_changes_info'),
+      $container->get('omnipedia.wiki_node_main_page'),
+      $container->get('omnipedia.wiki_node_revision'),
       $container->get('string_translation'),
     );
   }
@@ -97,10 +109,10 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
   ): AccessResultInterface {
 
     /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $previousNode = $node->getPreviousWikiNodeRevision();
+    $previousNode = $this->wikiNodeRevision->getPreviousRevision($node);
 
     return AccessResult::allowedIf(
-      !$node->isMainPage() &&
+      !$this->wikiNodeMainPage->isMainPage($node) &&
       $node->access('view', $account) &&
       \is_object($previousNode) &&
       $previousNode->access('view', $account),
@@ -145,7 +157,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
   public function title(NodeInterface $node): array {
 
     /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $previousNode = $node->getPreviousWikiNodeRevision();
+    $previousNode = $this->wikiNodeRevision->getPreviousRevision($node);
 
     return [
       '#markup'       => $this->t(

@@ -25,6 +25,7 @@ services:
       - '@string_translation'
       - '@omnipedia.wiki_node_changes_cache'
       - '@omnipedia.wiki_node_changes_info'
+      - '@omnipedia.wiki_node_revision'
 
   # The Omnipedia wiki node changes cache service.
   omnipedia.wiki_node_changes_cache:
