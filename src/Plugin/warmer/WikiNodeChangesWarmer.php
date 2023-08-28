@@ -15,8 +15,8 @@ use Drupal\node\NodeStorageInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
-use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_user\Service\RepresentativeRenderUserInterface;
+use Drupal\typed_entity\EntityWrapperInterface;
 use Drupal\user\RoleStorageInterface;
 use Drupal\user\UserInterface;
 use Drupal\user\UserStorageInterface;
@@ -71,14 +71,14 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
    * @param \Drupal\omnipedia_user\Service\RepresentativeRenderUserInterface $representativeRenderUser
    *   The Omnipedia representative render user service.
    *
+   * @param \Drupal\typed_entity\EntityWrapperInterface $typedEntityRepositoryManager
+   *   The Typed Entity repository manager.
+   *
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder
    *   The Omnipedia wiki node changes builder service.
    *
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface $wikiNodeChangesInfo
    *   The Omnipedia wiki node changes info service.
-   *
-   * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
-   *   The Omnipedia wiki node revision service.
    *
    * @param \Drupal\Core\State\StateInterface
    *   The Drupal state service.
@@ -92,9 +92,9 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
     protected readonly EntityTypeManagerInterface         $entityTypeManager,
     protected readonly LoggerInterface                    $loggerChannel,
     protected readonly RepresentativeRenderUserInterface  $representativeRenderUser,
+    protected readonly EntityWrapperInterface             $typedEntityRepositoryManager,
     protected readonly WikiNodeChangesBuilderInterface    $wikiNodeChangesBuilder,
     protected readonly WikiNodeChangesInfoInterface       $wikiNodeChangesInfo,
-    protected readonly WikiNodeRevisionInterface          $wikiNodeRevision,
     StateInterface  $state,
     TimeInterface   $time,
   ) {
@@ -132,9 +132,9 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
       $container->get('entity_type.manager'),
       $container->get('logger.channel.omnipedia_changes'),
       $container->get('omnipedia_user.representative_render_user'),
+      $container->get('Drupal\typed_entity\RepositoryManager'),
       $container->get('omnipedia.wiki_node_changes_builder'),
       $container->get('omnipedia.wiki_node_changes_info'),
-      $container->get('omnipedia.wiki_node_revision'),
       $container->get('state'),
       $container->get('datetime.time'),
     );
@@ -176,13 +176,18 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
         continue;
       }
 
-      /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
-      $previousNode = $this->wikiNodeRevision->getPreviousRevision($node);
+      /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
+      $previousWrappedNode = $this->typedEntityRepositoryManager->wrap(
+        $node,
+      )->getPreviousWikiRevision();
 
       // Skip if there's no previous wiki node revision.
-      if (!\is_object($previousNode)) {
+      if (!\is_object($previousWrappedNode)) {
         continue;
       }
+
+      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      $previousNode = $previousWrappedNode->getEntity();
 
       /** @var \Drupal\user\UserInterface|null */
       $renderUser = $this->representativeRenderUser->getUserToRenderAs(

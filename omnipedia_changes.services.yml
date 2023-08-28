@@ -23,9 +23,9 @@ services:
       - '@diff.html_diff'
       - '@renderer'
       - '@string_translation'
+      - '@Drupal\typed_entity\RepositoryManager'
       - '@omnipedia.wiki_node_changes_cache'
       - '@omnipedia.wiki_node_changes_info'
-      - '@omnipedia.wiki_node_revision'
 
   # The Omnipedia wiki node changes cache service.
   omnipedia.wiki_node_changes_cache:

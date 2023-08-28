@@ -114,14 +114,16 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
     AccountInterface $account, NodeInterface $node,
   ): AccessResultInterface {
 
-    /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $previousNode = $this->wikiNodeRevision->getPreviousRevision($node);
+    /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface|null */
+    $previousWrappedNode = $this->typedEntityRepositoryManager->wrap(
+      $node,
+    )->getPreviousWikiRevision();
 
     return AccessResult::allowedIf(
       !$this->wikiNodeMainPage->isMainPage($node) &&
       $node->access('view', $account) &&
-      \is_object($previousNode) &&
-      $previousNode->access('view', $account),
+      \is_object($previousWrappedNode) &&
+      $previousWrappedNode->getEntity()->access('view', $account),
     )
     ->addCacheableDependency($node);
 
@@ -162,11 +164,10 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    */
   public function title(NodeInterface $node): array {
 
-    /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $previousNode = $this->wikiNodeRevision->getPreviousRevision($node);
-
-    /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
-    $wrappedNode = $this->typedEntityRepositoryManager->wrap($previousNode);
+    /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface|null */
+    $previousWrappedNode = $this->typedEntityRepositoryManager->wrap(
+      $node,
+    )->getPreviousWikiRevision();
 
     return [
       '#markup'       => $this->t(
@@ -174,7 +175,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
         [
           '@title'  => $node->getTitle(),
           '@date'   => $this->timeline->getDateFormatted(
-            $wrappedNode->getWikiDate(), 'short'
+            $previousWrappedNode->getWikiDate(), 'short'
           ),
         ]
       ),

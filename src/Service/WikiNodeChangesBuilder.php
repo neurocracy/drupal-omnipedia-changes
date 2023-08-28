@@ -18,7 +18,7 @@ use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
 use Drupal\omnipedia_changes\WikiNodeChangesCssClassesInterface;
 use Drupal\omnipedia_changes\WikiNodeChangesCssClassesTrait;
 use Drupal\omnipedia_core\Entity\NodeInterface;
-use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
+use Drupal\typed_entity\EntityWrapperInterface;
 use HtmlDiffAdvancedInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -49,14 +49,14 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
    * @param \Drupal\Core\StringTranslation\TranslationInterface $stringTranslation
    *   The Drupal string translation service.
    *
+   * @param \Drupal\typed_entity\EntityWrapperInterface $typedEntityRepositoryManager
+   *   The Typed Entity repository manager.
+   *
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface $wikiNodeChangesCache
    *   The Omnipedia wiki node changes cache service.
    *
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface $wikiNodeChangesInfo
    *   The Omnipedia wiki node changes info service.
-   *
-   * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
-   *   The Omnipedia wiki node revision service.
    *
    * @see $this->alterHtmlDiffConfig()
    */
@@ -66,9 +66,9 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
     protected readonly HtmlDiffAdvancedInterface      $htmlDiff,
     protected readonly RendererInterface              $renderer,
     protected $stringTranslation,
+    protected readonly EntityWrapperInterface         $typedEntityRepositoryManager,
     protected readonly WikiNodeChangesCacheInterface  $wikiNodeChangesCache,
     protected readonly WikiNodeChangesInfoInterface   $wikiNodeChangesInfo,
-    protected readonly WikiNodeRevisionInterface      $wikiNodeRevision,
   ) {
 
     $this->alterHtmlDiffConfig();
@@ -138,8 +138,13 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
       return $this->wikiNodeChangesCache->get($node, $allowInvalid);
     }
 
-    /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $previousNode = $this->wikiNodeRevision->getPreviousRevision($node);
+    /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
+    $previousWrappedNode = $this->typedEntityRepositoryManager->wrap(
+      $node,
+    )->getPreviousWikiRevision();
+
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+    $previousNode = $previousWrappedNode->getEntity();
 
     /** @var \Drupal\Core\Entity\EntityViewBuilderInterface */
     $viewBuilder = $this->entityTypeManager->getViewBuilder(
@@ -267,14 +272,19 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
     NodeInterface $node, bool $allowInvalid = false
   ): array {
 
-    /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
-    $previousNode = $this->wikiNodeRevision->getPreviousRevision($node);
+    /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
+    $previousWrappedNode = $this->typedEntityRepositoryManager->wrap(
+      $node,
+    )->getPreviousWikiRevision();
 
     // Bail if not a wiki node or the wiki node does not have a previous
     // revision.
-    if (!\is_object($previousNode)) {
+    if (!\is_object($previousWrappedNode)) {
       return [];
     }
+
+    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+    $previousNode = $previousWrappedNode->getEntity();
 
     /** @var array */
     $renderArray = $this->getDiff($node, $allowInvalid);
