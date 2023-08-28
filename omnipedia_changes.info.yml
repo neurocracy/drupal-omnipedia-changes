@@ -15,4 +15,5 @@ dependencies:
   - omnipedia_date:omnipedia_date
   - omnipedia_user:omnipedia_user
   - pcb:pcb
+  - typed_entity:typed_entity
   - warmer:warmer

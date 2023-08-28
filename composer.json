@@ -26,6 +26,7 @@
     "drupal/omnipedia_user": "5.x-dev@dev || 6.x-dev@dev",
     "drupal/pcb": "^3.0",
     "drupal/queue_ui": "^3.1",
+    "drupal/typed_entity": "^4.0",
     "drupal/warmer": "^2.0",
     "symfony/css-selector": "^6.2",
     "symfony/dom-crawler": "^6.2"

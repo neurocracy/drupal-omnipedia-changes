@@ -19,6 +19,7 @@ use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_date\Service\TimelineInterface;
+use Drupal\typed_entity\EntityWrapperInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -42,6 +43,9 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * @param \Drupal\omnipedia_date\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
+   * @param \Drupal\typed_entity\EntityWrapperInterface $typedEntityRepositoryManager
+   *   The Typed Entity repository manager.
+   *
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface $wikiNodeChangesBuilder
    *   The Omnipedia wiki node changes builder service.
    *
@@ -64,6 +68,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
     protected readonly AccountProxyInterface            $currentUser,
     protected readonly LoggerInterface                  $loggerChannel,
     protected readonly TimelineInterface                $timeline,
+    protected readonly EntityWrapperInterface           $typedEntityRepositoryManager,
     protected readonly WikiNodeChangesBuilderInterface  $wikiNodeChangesBuilder,
     protected readonly WikiNodeChangesCacheInterface    $wikiNodeChangesCache,
     protected readonly WikiNodeChangesInfoInterface     $wikiNodeChangesInfo,
@@ -80,6 +85,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
       $container->get('current_user'),
       $container->get('logger.channel.omnipedia_changes'),
       $container->get('omnipedia.timeline'),
+      $container->get('Drupal\typed_entity\RepositoryManager'),
       $container->get('omnipedia.wiki_node_changes_builder'),
       $container->get('omnipedia.wiki_node_changes_cache'),
       $container->get('omnipedia.wiki_node_changes_info'),
@@ -159,13 +165,16 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
     /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
     $previousNode = $this->wikiNodeRevision->getPreviousRevision($node);
 
+    /** @var \Drupal\omnipedia_core\WrappedEntities\NodeWithWikiInfoInterface */
+    $wrappedNode = $this->typedEntityRepositoryManager->wrap($previousNode);
+
     return [
       '#markup'       => $this->t(
         '<span class="page-title__primary">@title<span class="page-title__glue">: </span></span><span class="page-title__secondary">Changes since @date</span>',
         [
           '@title'  => $node->getTitle(),
           '@date'   => $this->timeline->getDateFormatted(
-            $previousNode->getWikiNodeDate(), 'short'
+            $wrappedNode->getWikiDate(), 'short'
           ),
         ]
       ),
