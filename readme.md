@@ -112,6 +112,8 @@ described in the installation instructions for these dependencies:
 
   * [`omnipedia_date`](https://github.com/neurocracy/drupal-omnipedia-date)
 
+  * [`omnipedia_main_page`](https://github.com/neurocracy/drupal-omnipedia-main-page)
+
   * [`omnipedia_user`](https://github.com/neurocracy/drupal-omnipedia-user)
 
 ## Front-end dependencies

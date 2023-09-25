@@ -16,9 +16,9 @@ use Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
 use Drupal\omnipedia_core\Entity\NodeInterface;
-use Drupal\omnipedia_core\Service\WikiNodeMainPageInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_date\Service\TimelineInterface;
+use Drupal\omnipedia_main_page\Service\MainPageResolverInterface;
 use Drupal\typed_entity\EntityWrapperInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -40,6 +40,9 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * @param \Psr\Log\LoggerInterface $loggerChannel
    *   Our logger channel.
    *
+   * @param \Drupal\omnipedia_main_page\Service\MainPageResolverInterface $mainPageResolver
+   *   The Omnipedia main page resolver service.
+   *
    * @param \Drupal\omnipedia_date\Service\TimelineInterface $timeline
    *   The Omnipedia timeline service.
    *
@@ -55,9 +58,6 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * @param \Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface $wikiNodeChangesInfo
    *   The Omnipedia wiki node changes info service.
    *
-   * @param \Drupal\omnipedia_core\Service\WikiNodeMainPageInterface $wikiNodeMainPage
-   *   The Omnipedia wiki node main page service.
-   *
    * @param \Drupal\omnipedia_core\Service\WikiNodeRevisionInterface $wikiNodeRevision
    *   The Omnipedia wiki node revision service.
    *
@@ -67,12 +67,12 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
   public function __construct(
     protected readonly AccountProxyInterface            $currentUser,
     protected readonly LoggerInterface                  $loggerChannel,
+    protected readonly MainPageResolverInterface        $mainPageResolver,
     protected readonly TimelineInterface                $timeline,
     protected readonly EntityWrapperInterface           $typedEntityRepositoryManager,
     protected readonly WikiNodeChangesBuilderInterface  $wikiNodeChangesBuilder,
     protected readonly WikiNodeChangesCacheInterface    $wikiNodeChangesCache,
     protected readonly WikiNodeChangesInfoInterface     $wikiNodeChangesInfo,
-    protected readonly WikiNodeMainPageInterface        $wikiNodeMainPage,
     protected readonly WikiNodeRevisionInterface        $wikiNodeRevision,
     protected $stringTranslation,
   ) {}
@@ -84,12 +84,12 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
     return new static(
       $container->get('current_user'),
       $container->get('logger.channel.omnipedia_changes'),
+      $container->get('omnipedia_main_page.resolver'),
       $container->get('omnipedia.timeline'),
       $container->get('Drupal\typed_entity\RepositoryManager'),
       $container->get('omnipedia.wiki_node_changes_builder'),
       $container->get('omnipedia.wiki_node_changes_cache'),
       $container->get('omnipedia.wiki_node_changes_info'),
-      $container->get('omnipedia.wiki_node_main_page'),
       $container->get('omnipedia.wiki_node_revision'),
       $container->get('string_translation'),
     );
@@ -120,7 +120,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
     )->getPreviousWikiRevision();
 
     return AccessResult::allowedIf(
-      !$this->wikiNodeMainPage->isMainPage($node) &&
+      !$this->mainPageResolver->is($node) &&
       $node->access('view', $account) &&
       \is_object($previousWrappedNode) &&
       $previousWrappedNode->getEntity()->access('view', $account),

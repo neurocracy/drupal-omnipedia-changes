@@ -23,6 +23,7 @@
     "drupal/hux": "^1.1",
     "drupal/omnipedia_core": "4.x-dev@dev || 5.x-dev@dev",
     "drupal/omnipedia_date": "4.x-dev@dev || 5.x-dev@dev",
+    "drupal/omnipedia_main_page": "1.x-dev@dev",
     "drupal/omnipedia_user": "5.x-dev@dev || 6.x-dev@dev",
     "drupal/pcb": "^3.0",
     "drupal/queue_ui": "^3.1",
