@@ -8,7 +8,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\Cache\Context\CacheContextsManager;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
-use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Entity\WikiNodeInfo;
 use Drupal\omnipedia_user\Service\PermissionHashesInterface;
 

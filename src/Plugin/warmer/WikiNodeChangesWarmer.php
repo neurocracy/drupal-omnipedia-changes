@@ -13,7 +13,6 @@ use Drupal\Core\State\StateInterface;
 use Drupal\Core\Utility\Error;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
-use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_user\Service\RepresentativeRenderUserInterface;
 use Drupal\typed_entity\EntityWrapperInterface;
 use Drupal\user\RoleStorageInterface;
@@ -167,7 +166,7 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
 
       list($nid, $roles) = \explode(':', $id);
 
-      /** \Drupal\omnipedia_core\Entity\NodeInterface|null */
+      /** \Drupal\node\NodeInterface|null */
       $node = $this->entityTypeManager->getStorage('node')->load($nid);
 
       // Skip if we couldn't load this node.
@@ -185,7 +184,7 @@ class WikiNodeChangesWarmer extends WarmerPluginBase {
         continue;
       }
 
-      /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+      /** @var \Drupal\node\NodeInterface */
       $previousNode = $previousWrappedNode->getEntity();
 
       /** @var \Drupal\user\UserInterface|null */

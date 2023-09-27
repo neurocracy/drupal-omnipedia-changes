@@ -7,9 +7,9 @@ namespace Drupal\omnipedia_changes\Service;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Render\BubbleableMetadata;
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface;
-use Drupal\omnipedia_core\Entity\NodeInterface;
 
 /**
  * The Omnipedia wiki node changes cache service.

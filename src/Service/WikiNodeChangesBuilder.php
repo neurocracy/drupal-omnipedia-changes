@@ -9,6 +9,7 @@ use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\Core\Render\RenderContext;
 use Drupal\Core\Render\RendererInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_changes\Event\OmnipediaContentChangesEventInterface;
 use Drupal\omnipedia_changes\Event\Omnipedia\Changes\DiffPostBuildEvent;
 use Drupal\omnipedia_changes\Event\Omnipedia\Changes\DiffPostRenderPreBuildEvent;
@@ -17,7 +18,6 @@ use Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
 use Drupal\omnipedia_changes\WikiNodeChangesCssClassesInterface;
 use Drupal\omnipedia_changes\WikiNodeChangesCssClassesTrait;
-use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\typed_entity\EntityWrapperInterface;
 use HtmlDiffAdvancedInterface;
 use Symfony\Component\DomCrawler\Crawler;
@@ -115,7 +115,7 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
   /**
    * Get diff content for a wiki node.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A wiki node object to get the diff content for.
    *
    * @param boolean $allowInvalid
@@ -143,7 +143,7 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
       $node,
     )->getPreviousWikiRevision();
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+    /** @var \Drupal\node\NodeInterface */
     $previousNode = $previousWrappedNode->getEntity();
 
     /** @var \Drupal\Core\Entity\EntityViewBuilderInterface */
@@ -283,7 +283,7 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
       return [];
     }
 
-    /** @var \Drupal\omnipedia_core\Entity\NodeInterface */
+    /** @var \Drupal\node\NodeInterface */
     $previousNode = $previousWrappedNode->getEntity();
 
     /** @var array */

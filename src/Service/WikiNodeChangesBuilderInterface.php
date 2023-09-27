@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_changes\Service;
 
-use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * The Omnipedia wiki node changes builder service interface.
@@ -22,7 +22,7 @@ interface WikiNodeChangesBuilderInterface {
    * responsible for not displaying information about nodes the user does not
    * have access to.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A node object.
    *
    * @param boolean $allowInvalid
@@ -44,7 +44,7 @@ interface WikiNodeChangesBuilderInterface {
    * This returns a render array with placeholder content and cache metadata
    * that's invalidated as soon as this wiki node's changes are built.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A node object.
    *
    * @return array

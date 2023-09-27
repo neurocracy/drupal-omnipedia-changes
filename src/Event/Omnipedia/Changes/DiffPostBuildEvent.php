@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_changes\Event\Omnipedia\Changes;
 
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_changes\Event\Omnipedia\Changes\AbstractDiffEvent;
-use Drupal\omnipedia_core\Entity\NodeInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
 /**

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_changes\Service;
 
-use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * The Omnipedia wiki node changes info service interface.

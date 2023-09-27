@@ -12,10 +12,10 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Session\AccountProxyInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
+use Drupal\node\NodeInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesBuilderInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesCacheInterface;
 use Drupal\omnipedia_changes\Service\WikiNodeChangesInfoInterface;
-use Drupal\omnipedia_core\Entity\NodeInterface;
 use Drupal\omnipedia_core\Service\WikiNodeRevisionInterface;
 use Drupal\omnipedia_date\Service\TimelineInterface;
 use Drupal\omnipedia_main_page\Service\MainPageResolverInterface;
@@ -101,7 +101,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * @param \Drupal\Core\Session\AccountInterface $account
    *   Run access checks for this account.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A node object to check access for.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
@@ -135,7 +135,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * @param \Drupal\Core\Session\AccountInterface $account
    *   Run access checks for this account.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A node object to check access for.
    *
    * @return \Drupal\Core\Access\AccessResultInterface
@@ -156,7 +156,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
   /**
    * Title callback for the route.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A node object.
    *
    * @return array
@@ -192,7 +192,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * be shown. We're erring on the side of showing potentially out of date
    * changes rather than none at all.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A node object.
    *
    * @return array
@@ -234,7 +234,7 @@ class OmnipediaWikiNodeChangesController implements ContainerInjectionInterface 
    * This invalidates the changes for the provided wiki node, builds the
    * changes, and then redirects to the changes route.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   A node object.
    *
    * @return \Symfony\Component\HttpFoundation\RedirectResponse

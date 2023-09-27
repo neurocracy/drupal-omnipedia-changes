@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\omnipedia_changes\Event\Omnipedia\Changes;
 
-use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\node\NodeInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 /**
@@ -15,10 +15,10 @@ abstract class AbstractDiffEvent extends Event {
   /**
    * Constructs this event object.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $currentNode
+   * @param \Drupal\node\NodeInterface $currentNode
    *   The current wiki node object.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $previousNode
+   * @param \Drupal\node\NodeInterface $previousNode
    *   The previous wiki node object.
    *
    * @param string $currentRendered

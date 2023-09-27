@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Drupal\omnipedia_changes\Service;
 
 use Drupal\Core\Cache\CacheBackendInterface;
-use Drupal\omnipedia_core\Entity\NodeInterface;
+use Drupal\node\NodeInterface;
 
 /**
  * The Omnipedia wiki node changes cache service interface.
@@ -22,7 +22,7 @@ interface WikiNodeChangesCacheInterface {
   /**
    * Determine whether rendered changes for a provided wiki node are cached.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   The wiki node to check.
    *
    * @param boolean $allowInvalid
@@ -43,7 +43,7 @@ interface WikiNodeChangesCacheInterface {
   /**
    * Get cached rendered changes for a provided wiki node, if any.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   The wiki node to attempt to get cached changes for.
    *
    * @param boolean $allowInvalid
@@ -63,7 +63,7 @@ interface WikiNodeChangesCacheInterface {
   /**
    * Set rendered changes to the changes cache.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   The wiki node to set cached changes for.
    *
    * @param array $renderArray
@@ -74,7 +74,7 @@ interface WikiNodeChangesCacheInterface {
   /**
    * Invalidate the changes cache for the provided wiki node.
    *
-   * @param \Drupal\omnipedia_core\Entity\NodeInterface $node
+   * @param \Drupal\node\NodeInterface $node
    *   The wiki node to invalidate cached changes for.
    */
   public function invalidate(NodeInterface $node): void;
