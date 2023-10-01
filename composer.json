@@ -21,7 +21,7 @@
     "drupal/ambientimpact_core": "2.x-dev@dev",
     "drupal/diff": "^1.0",
     "drupal/hux": "^1.1",
-    "drupal/omnipedia_core": "4.x-dev@dev || 5.x-dev@dev",
+    "drupal/omnipedia_core": "4.x-dev@dev || 5.x-dev@dev || 6.x-dev@dev",
     "drupal/omnipedia_date": "4.x-dev@dev || 5.x-dev@dev",
     "drupal/omnipedia_main_page": "1.x-dev@dev",
     "drupal/omnipedia_user": "5.x-dev@dev || 6.x-dev@dev",
