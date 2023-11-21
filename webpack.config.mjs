@@ -1,5 +1,5 @@
 import Encore from '@symfony/webpack-encore';
-// import { glob } from 'glob'; // @todo Upgrade to glob 10.x which has ESM.
+import { glob } from 'glob';
 import * as path from 'node:path';
 
 // The remaining modules are CommonJS only. Because of this, they must be
@@ -8,7 +8,6 @@ const { default: autoprefixer } = await import('autoprefixer');
 const { default: componentPaths } = await import(
   'drupal-ambientimpact-core/componentPaths'
 );
-const { default: glob } = await import('glob');
 const { default: RemoveEmptyScriptsPlugin } = await import(
   'webpack-remove-empty-scripts'
 );
@@ -32,25 +31,36 @@ const outputToSourcePaths = true;
  * This uses the 'glob' package to automagically build the array of entry
  * points, as there are a lot of them spread out over many components.
  *
- * @return {Array}
+ * @return {Object.<string, string>}
  *
  * @see https://www.npmjs.com/package/glob
  */
 function getGlobbedEntries() {
 
-  return glob.sync(
-    // This specifically only searches for SCSS files that aren't partials, i.e.
-    // do not start with '_'.
-    `./!(${distPath})/**/!(_)*.scss`
-  ).reduce(function(entries, currentPath) {
+  /**
+   * Entries to be returned.
+   *
+   * @type {Object.<string, string>}
+   *
+   * @see Encore#addEntries()
+   *   Explains expected format.
+   */
+  let entries = {};
 
-      const parsed = path.parse(currentPath);
+  const results = glob.sync(
+    `./!(${distPath})/**/!(_)*.scss`,
+  );
 
-      entries[`${parsed.dir}/${parsed.name}`] = currentPath;
+  for (const result of results) {
 
-      return entries;
+    const parsed = path.parse(result);
 
-  }, {});
+    // Note the leading './'
+    entries[`./${parsed.dir}/${parsed.name}`] = `./${result}`;
+
+  }
+
+  return entries;
 
 };
 
