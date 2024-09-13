@@ -41,7 +41,7 @@
     },
     "patches": {
       "drupal/pcb": {
-        "PHPUnit test fails on Drupal ^10.3 due to missing void return types [#3474283]: https://www.drupal.org/project/pcb/issues/3474283": "https://raw.githubusercontent.com/neurocracy/drupal-omnipedia-changes/7.x/patches/drupal/pcb/3474283-phpunit-test-method-return-type.patch"
+        "PHPUnit test fails on Drupal ^10.3 due to missing void return types [#3474283]: https://www.drupal.org/project/pcb/issues/3474283": "https://raw.githubusercontent.com/neurocracy/drupal-omnipedia-changes/c1b045af3ffb97658b3916726f3b37f39d1a663d/patches/drupal/pcb/3474283-phpunit-test-method-return-type.patch"
       }
     }
   }
