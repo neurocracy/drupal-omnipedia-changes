@@ -22,7 +22,7 @@
     "@symfony/webpack-encore": "^4.7.0",
     "autoprefixer": "^10.2.5",
     "css-loader": "^6.11.0",
-    "glob": "^10.3.10",
+    "glob": "^11.0.0",
     "mini-css-extract-plugin": "^2.9.1",
     "postcss": "^8.4.31",
     "postcss-loader": "^7.0.1",
