@@ -108,13 +108,13 @@ described in the installation instructions for these dependencies:
 
 * The following Omnipedia modules:
 
-  * [`omnipedia_core`](https://github.com/neurocracy/drupal-omnipedia-core)
+  * [`omnipedia_core`](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-core)
 
-  * [`omnipedia_date`](https://github.com/neurocracy/drupal-omnipedia-date)
+  * [`omnipedia_date`](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-date)
 
-  * [`omnipedia_main_page`](https://github.com/neurocracy/drupal-omnipedia-main-page)
+  * [`omnipedia_main_page`](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-main-page)
 
-  * [`omnipedia_user`](https://github.com/neurocracy/drupal-omnipedia-user)
+  * [`omnipedia_user`](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-user)
 
 ## Front-end dependencies
 
@@ -142,9 +142,10 @@ should get you up and running.
 In your root `composer.json`, add the following to the `"repositories"` section:
 
 ```json
-"drupal/omnipedia_changes": {
+{
   "type": "vcs",
-  "url": "https://github.com/neurocracy/drupal-omnipedia-changes.git"
+  "url": "https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-changes.git",
+  "only": ["drupal/omnipedia_changes"]
 }
 ```
 
@@ -248,7 +249,7 @@ The following major version bumps indicate breaking changes:
 
 * 4.x - Front-end package manager is now [Yarn](https://yarnpkg.com/); front-end build process ported to [Webpack](https://webpack.js.org/).
 
-* 5.x - Moved and refactored the `omnipedia.wiki_node_changes_user` service to multiple services in the [`omnipedia_user` module](https://github.com/neurocracy/drupal-omnipedia-user).
+* 5.x - Moved and refactored the `omnipedia.wiki_node_changes_user` service to multiple services in the [`omnipedia_user` module](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-user).
 
 * 6.x - Requires Drupal 9.5; includes backward compatible [Drupal 10](https://www.drupal.org/project/drupal/releases/10.0.0) deprecation fixes but is still not fully compatible.
 
