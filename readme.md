@@ -4,6 +4,8 @@ which provides the wiki page changes functionality for
 
 ⚠️ ***[Why open source? / Spoiler warning](https://omnipedia.app/open-source)***
 
+*Please note that [all development and issue tracking is done on <img src="https://gitlab.com/neurocracy/omnipedia/omnipedia/-/raw/main/docs/assets/gitlab/gitlab-logo.svg" alt="The GitLab logo" width="16" height="16"> GitLab](https://gitlab.com/neurocracy/omnipedia/modules/omnipedia-changes).*
+
 ----
 
 # Description
