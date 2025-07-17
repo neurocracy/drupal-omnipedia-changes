@@ -19,7 +19,7 @@
     "drupal/core": "^10.0 || ^11.0",
     "caxy/php-htmldiff": "^0.1.12",
     "cweagans/composer-patches": "^1.7.0",
-    "drupal/ambientimpact_core": "^2.0@dev",
+    "drupal/ambientimpact_core": "^2.0@dev || ^3.0@dev",
     "drupal/diff": "^1.0",
     "drupal/hux": "^1.1",
     "drupal/omnipedia_core": "^4.0@dev || ^5.0@dev || ^6.0@dev",
