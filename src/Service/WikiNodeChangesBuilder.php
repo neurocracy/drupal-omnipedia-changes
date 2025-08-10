@@ -106,10 +106,6 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
 
     $config->removeIsolatedDiffTag('a');
 
-    if (!$config->isIsolatedDiffTag('p')) {
-      $config->addIsolatedDiffTag('p');
-    }
-
   }
 
   /**
