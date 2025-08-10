@@ -93,6 +93,9 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
    *   changed href attributes. The only instance where this currently happens
    *   without the link text changing is when an internal wiki link changes to
    *   point to the new date's revision, which would be irrelevant to highlight.
+   *
+   * - Adds the <p> element as an isolated diff to prevent different paragraphs
+   *   that have a few words in common being considered partly the same.
    */
   protected function alterHtmlDiffConfig(): void {
 
@@ -101,14 +104,11 @@ class WikiNodeChangesBuilder implements WikiNodeChangesBuilderInterface, WikiNod
 
     $config->setPurifierEnabled(false);
 
-    /** @var array */
-    $isolatedDiffElements = $config->getIsolatedDiffTags();
+    $config->removeIsolatedDiffTag('a');
 
-    if (isset($isolatedDiffElements['a'])) {
-      unset($isolatedDiffElements['a']);
+    if (!$config->isIsolatedDiffTag('p')) {
+      $config->addIsolatedDiffTag('p');
     }
-
-    $config->setIsolatedDiffTags($isolatedDiffElements);
 
   }
 
