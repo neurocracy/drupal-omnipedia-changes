@@ -30,8 +30,8 @@
     "drupal/queue_ui": "^3.1",
     "drupal/typed_entity": "^4.0",
     "drupal/warmer": "^2.0",
-    "symfony/css-selector": "^6.2",
-    "symfony/dom-crawler": "^6.2"
+    "symfony/css-selector": "^6.2 || ^7.3",
+    "symfony/dom-crawler": "^6.2 || ^7.3"
   },
   "extra": {
     "drush": {
