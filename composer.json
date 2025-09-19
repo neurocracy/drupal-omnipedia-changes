@@ -18,7 +18,6 @@
     "php": "^8.1",
     "drupal/core": "^10.0 || ^11.0",
     "caxy/php-htmldiff": "^0.1.12",
-    "cweagans/composer-patches": "^1.7.0",
     "drupal/ambientimpact_core": "^2.0@dev || ^3.0@dev",
     "drupal/diff": "^1.0",
     "drupal/hux": "^1.1",
@@ -26,7 +25,7 @@
     "drupal/omnipedia_date": "^4.0@dev || ^5.0@dev",
     "drupal/omnipedia_main_page": "^1.0@dev",
     "drupal/omnipedia_user": "^5.0@dev || ^6.0@dev",
-    "drupal/pcb": "^3.0 || ^4.0",
+    "drupal/pcb": "^4.0",
     "drupal/queue_ui": "^3.1",
     "drupal/typed_entity": "^4.0",
     "drupal/warmer": "^2.0",
@@ -37,11 +36,6 @@
     "drush": {
       "services": {
         "drush.services.yml": "^10"
-      }
-    },
-    "patches": {
-      "drupal/pcb": {
-        "PHPUnit test fails on Drupal ^10.3 due to missing void return types [#3474283]: https://www.drupal.org/project/pcb/issues/3474283": "https://raw.githubusercontent.com/neurocracy/drupal-omnipedia-changes/c1b045af3ffb97658b3916726f3b37f39d1a663d/patches/drupal/pcb/3474283-phpunit-test-method-return-type.patch"
       }
     }
   }
